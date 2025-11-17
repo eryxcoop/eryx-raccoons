@@ -1,29 +1,41 @@
 pragma language_version >= 0.17.0;
 import CompactStandardLibrary;
 
-export ledger publicKeys: List<Bytes<32>>;
 export ledger amountOfDataRequired: Field;
 export ledger fieldsOfDataRequired: List<opaque<string>>;
 export ledger eventDescription: opaque<string>;
 export ledger eventName: opaque<string>;
+export ledger eventCapacity: Field;
 export ledger eventOwner: Bytes<32>;
 
-
-witness ownerSecretKey(): Bytes<32>;
+witness secretKey(): Bytes<32>;
 witness findItem(item: Field): MerkleTreePath<10, Field>;
 
+witness getUserData(): List<Field>;
+
+
 constructor(
-    initialPublicKeys: List<Bytes<32>>, 
-    format_: opaque<string>, 
-    description_: opaque<string>,
-    name_: opaque<string>,
+    amountOfDataRequired_: Field;
+    fieldsOfDataRequired_: List<opaque<string>>;
+    eventDescription_: opaque<string>;
+    eventName_: opaque<string>;
+    eventCapacity_: Field;
 ) {
-    publicKeys = initialPublicKeys;
-    format = format_;
-    description = description_;
-    name = name_;
-    eventOwner = disclose(publicKey(ownerSecretKey()));
+    amountOfDataRequired = amountOfDataRequired_
+    fieldsOfDataRequired = fieldsOfDataRequired_
+    eventDescription = eventDescription_
+    eventName = eventName_
+    eventCapacity = eventCapacity_
+    eventOwner = disclose(publicKey(secretKey()));
 }
+
+export circuit buyTicket: (
+    fieldData: List<Field>,
+
+){
+
+}
+
 
 export circuit check(credential: MerkleTree<4, Field>, item: Field): [] {
   // Verify owner signature
