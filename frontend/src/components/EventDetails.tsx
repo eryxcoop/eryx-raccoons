@@ -25,8 +25,22 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
     // Simulate purchase process
     setTimeout(() => {
       // Generate mock purchase data
+      const merkleTreeRoot = '0x' + Math.random().toString(16).substr(2, 64)
+      const merkleTree = JSON.stringify({
+        leaves: [
+          '0x' + Math.random().toString(16).substr(2, 64),
+          '0x' + Math.random().toString(16).substr(2, 64),
+          '0x' + Math.random().toString(16).substr(2, 64)
+        ],
+        nodes: [
+          '0x' + Math.random().toString(16).substr(2, 64),
+          '0x' + Math.random().toString(16).substr(2, 64)
+        ]
+      })
+
       const purchaseResult: PurchaseResult = {
-        merkleTreeRoot: '0x' + Math.random().toString(16).substr(2, 64),
+        merkleTree: merkleTree,
+        merkleTreeRoot: merkleTreeRoot,
         documentNumber: personalData.documentNumber,
         birthDate: personalData.birthDate,
         merklePathDocument: generateMerklePath(),
