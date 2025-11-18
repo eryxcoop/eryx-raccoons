@@ -1,6 +1,6 @@
-# Eryx Raccoons - Frontend
+# CypherPass - Frontend
 
-React TypeScript frontend for event ticket purchase.
+CypherPass empowers people to purchase tickets directly, removing intermediaries and sharing only the minimum necessary data.
 
 ## Features
 
