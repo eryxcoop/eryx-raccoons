@@ -5,6 +5,7 @@ import EventDetails from './components/EventDetails'
 import PersonalDataForm from './components/PersonalDataForm'
 import PurchaseComplete from './components/PurchaseComplete'
 import QRValidator from './components/QRValidator'
+import MerklePathGenerator from './components/MerklePathGenerator'
 import './App.css'
 
 export interface EventData {
@@ -30,7 +31,7 @@ export interface PurchaseResult {
   transactionID: string
 }
 
-type Step = 'home' | 'code-input' | 'event-details' | 'purchase-complete' | 'qr-validation'
+type Step = 'home' | 'code-input' | 'event-details' | 'purchase-complete' | 'qr-validation' | 'merkle-path-generator'
 
 function App() {
   const [step, setStep] = useState<Step>('home')
@@ -66,6 +67,7 @@ function App() {
           <Home
             onNavigateToPurchase={() => setStep('code-input')}
             onNavigateToValidation={() => setStep('qr-validation')}
+            onNavigateToMerklePath={() => setStep('merkle-path-generator')}
           />
         )}
         {step === 'code-input' && (
@@ -89,6 +91,9 @@ function App() {
         )}
         {step === 'qr-validation' && (
           <QRValidator onBack={handleBackToHome} />
+        )}
+        {step === 'merkle-path-generator' && (
+          <MerklePathGenerator onBack={handleBackToHome} />
         )}
       </div>
     </div>

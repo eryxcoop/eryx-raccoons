@@ -3,11 +3,17 @@ import { Html5Qrcode } from 'html5-qrcode'
 import './QRValidator.css'
 
 interface QRData {
-  merkleTreeRoot: string
-  documentNumber: string
-  birthDate: string
-  merklePathDocument: string[]
-  merklePathBirthDate: string[]
+  merkleTreeRoot?: string
+  documentNumber?: string
+  birthDate?: string
+  merklePathDocument?: string[]
+  merklePathBirthDate?: string[]
+  merklePaths?: {
+    name?: string[]
+    email?: string[]
+    documentNumber?: string[]
+    birthDate?: string[]
+  }
 }
 
 interface QRValidatorProps {
@@ -50,7 +56,7 @@ function QRValidator({ onBack }: QRValidatorProps) {
         (decodedText) => {
           handleQRCodeScanned(decodedText)
         },
-        (errorMessage) => {
+        () => {
           // Ignore scanning errors, just keep scanning
         }
       )
@@ -84,8 +90,25 @@ function QRValidator({ onBack }: QRValidatorProps) {
       // Parse the QR code data
       const qrData: QRData = JSON.parse(decodedText)
 
+      // Check if this is a merkle paths QR (from MerklePathGenerator)
+      if (qrData.merklePaths) {
+        // Validate: fail if "name" is in merkle paths
+        const hasName = 'name' in qrData.merklePaths && qrData.merklePaths.name
+        
+        if (hasName) {
+          setValidationResult('error')
+          setErrorMessage('Invalid ticket')
+          return
+        }
+
+        // If validation passes (no name in paths)
+        setValidationResult('success')
+        return
+      }
+
+      // Legacy validation for old QR format
       // Validate the QR code
-      // For now, invalid if document number is 12345678
+      // Invalid if document number is 12345678
       if (qrData.documentNumber === '12345678') {
         setValidationResult('error')
         setErrorMessage('Invalid ticket: Document number not authorized')
