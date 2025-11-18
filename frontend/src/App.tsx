@@ -1,15 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Home from './components/Home'
 import CreateEvent from './components/CreateEvent'
 import EventCodeInput from './components/EventCodeInput'
 import OrganizerView from './components/OrganizerView'
 import EventDetails from './components/EventDetails'
-import PersonalDataForm from './components/PersonalDataForm'
 import PurchaseComplete from './components/PurchaseComplete'
 import QRValidator from './components/QRValidator'
 import MerklePathGenerator from './components/MerklePathGenerator'
 import NavigationHeader from './components/NavigationHeader'
 import Logo from './components/Logo'
+import Toast from './components/Toast'
 import './App.css'
 
 export interface EventData {
@@ -47,6 +47,13 @@ function App() {
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | null>(null)
   const [createEventFrom, setCreateEventFrom] = useState<'home' | 'organizer'>('home')
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!toastMessage) return
+    const timer = setTimeout(() => setToastMessage(null), 3000)
+    return () => clearTimeout(timer)
+  }, [toastMessage])
 
   const navigateTo = (newStep: Step) => {
     if (step !== 'home' && step !== newStep) {
@@ -123,6 +130,7 @@ function App() {
           showBack={history.length > 0}
         />
       )}
+      {toastMessage && <Toast message={toastMessage} />}
       <div className="app-wrapper">
         <div className="container">
         {step === 'home' && (
@@ -134,7 +142,7 @@ function App() {
         {step === 'create-event' && (
           <CreateEvent
             onEventCreated={() => {
-              alert('Event created successfully!')
+              setToastMessage('Event saved! It is now available for attendees.')
               setStep(createEventFrom === 'organizer' ? 'organizer-view' : 'home')
               setHistory([])
             }}
