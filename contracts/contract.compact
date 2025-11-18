@@ -6,12 +6,11 @@ export ledger eventDescription: Opaque<"string">;
 export ledger eventCapacity: Uint<32>;
 export ledger eventOwner: Bytes<32>;
 export ledger ticketPrice: Uint<32>;
+export ledger userData: List<Opaque<"string">>;
 
-export ledger soldTickets: List<MerkleTreeDigest>;
+export ledger usedTickets: Map<MerkleTreeDigest, Boolean>;
 
-witness secretKey(): Bytes<32>;
-witness findItem(item: Field): MerkleTreePath<10, Field>;
-
+witness secretKey(): Bytes<32>; 
 
 constructor(
     eventName_: Opaque<"string">,
@@ -27,29 +26,28 @@ constructor(
     eventOwner = disclose(publicKey(secretKey()));
 }
 
+// Action performed by the Atendee/Client/Buyer
 export circuit buyTicket(
     merkleRoot: MerkleTreeDigest
-): Boolean {
+): Uint<64> {
     assert(eventCapacity > 0, "There are no more tickets left.");
     eventCapacity = eventCapacity - 1;
 
     // Ideally, pay the ticket price to the owner of the contract
 
-
+    const currentIndex = usedTickets.size();
     // Add the merkle tree to the sold tickets list
-    soldTickets.pushFront(disclose(merkleRoot));
+    usedTickets.insert(disclose(merkleRoot), false);
 
-    return true;
+    return currentIndex;
 }
 
-//circuit insert()
-
-
-// export circuit check(credential: MerkleTree<4, Field>, item: Field): [] {
-//   // Verify owner signature
-//   const path = findItem(disclose(item));
-//   assert(items.checkRoot(merkleTreePathRoot<10, Field>(disclose(path))), "path must be valid");
-// }
+export circuit checkTicket(ticket: MerkleTreeDigest): Boolean {
+  const foundTicket = usedTickets.lookup(disclose(ticket));
+  if (foundTicket) { return false; } // Ticket was already used
+  usedTickets.insert(disclose(ticket), true);
+  return true;
+}
 
 export circuit publicKey(secret_key: Bytes<32>): Bytes<32> {
     return persistentHash<[Bytes<32>, Bytes<32>]>([pad(32, "trash"), secret_key]);
