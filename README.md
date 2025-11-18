@@ -67,6 +67,8 @@ On the validator's side, this will open a camera to scan the atendee's QR code. 
 
 Only certain people can do this verification to avoid a malicious user to mark unused tickets as used, so the contract owner should also have the possibility to grant that role to one or many addresses. 
 
+![](./images/scan.png)
+
 ## Run on a local environment
 Just run
 
