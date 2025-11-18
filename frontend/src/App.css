@@ -169,3 +169,17 @@
   }
 }
 
+.wallet-button-fixed {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 30;
+}
+
+@media (max-width: 768px) {
+  .wallet-button-fixed {
+    top: 20px;
+    right: 16px;
+  }
+}
+

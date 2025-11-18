@@ -10,6 +10,7 @@ import MerklePathGenerator from './components/MerklePathGenerator'
 import NavigationHeader from './components/NavigationHeader'
 import Logo from './components/Logo'
 import Toast from './components/Toast'
+import WalletButton from './components/WalletButton'
 import './App.css'
 
 export interface EventData {
@@ -123,6 +124,9 @@ function App() {
         <span className="decoration decoration-16">ZK</span>
       </div>
       <Logo />
+      <div className="wallet-button-fixed">
+        <WalletButton />
+      </div>
       {step !== 'home' && (
         <NavigationHeader
           onHome={handleBackToHome}
