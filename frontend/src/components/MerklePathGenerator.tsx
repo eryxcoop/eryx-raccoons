@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Html5Qrcode } from 'html5-qrcode'
 import { QRCodeSVG } from 'qrcode.react'
+import { EventData } from '../App'
 import './MerklePathGenerator.css'
 
 interface MerkleTree {
@@ -8,25 +8,30 @@ interface MerkleTree {
   nodes: string[]
 }
 
-interface ScannedQRData {
-  merkleTree?: MerkleTree
-  name?: string
-  email?: string
-  documentNumber?: string
-  birthDate?: string
+interface StoredMerkleData {
+  merkleTree: MerkleTree
+  merkleTreeRoot: string
+  personalData: {
+    name: string
+    email: string
+    documentNumber: string
+    birthDate: string
+  }
 }
 
 type SelectedField = 'name' | 'email' | 'documentNumber' | 'birthDate'
 
-function MerklePathGenerator() {
-  const [isScanning, setIsScanning] = useState(false)
-  const [scannedMerkleTree, setScannedMerkleTree] = useState<MerkleTree | null>(null)
-  const [merkleTreeRoot, setMerkleTreeRoot] = useState<string>('')
+interface MerklePathGeneratorProps {
+  initialEventName?: string
+}
+
+function MerklePathGenerator({ initialEventName }: MerklePathGeneratorProps) {
+  const [events, setEvents] = useState<EventData[]>([])
+  const [selectedEvent, setSelectedEvent] = useState<string>(initialEventName || '')
+  const [storedMerkleData, setStoredMerkleData] = useState<StoredMerkleData | null>(null)
   const [selectedFields, setSelectedFields] = useState<SelectedField[]>([])
   const [generatedQR, setGeneratedQR] = useState<string | null>(null)
   const [error, setError] = useState<string>('')
-  const qrCodeRef = useRef<Html5Qrcode | null>(null)
-  const scannerId = useRef<string>(`merkle-scanner-${Date.now()}`)
   const generatedQRRef = useRef<SVGSVGElement>(null)
 
   const availableFields: { key: SelectedField; label: string }[] = [
@@ -36,91 +41,35 @@ function MerklePathGenerator() {
     { key: 'birthDate', label: 'Birth Date' }
   ]
 
+  const handleEventSelect = (eventName: string) => {
+    setSelectedEvent(eventName)
+    setError('')
+    
+    // Load merkle tree data for selected event
+    const merkleTreesKey = 'merkleTrees'
+    const merkleTrees = JSON.parse(localStorage.getItem(merkleTreesKey) || '{}')
+    
+    if (merkleTrees[eventName]) {
+      setStoredMerkleData(merkleTrees[eventName])
+      setSelectedFields([])
+      setGeneratedQR(null)
+    } else {
+      setError('No purchase found for this event. Please purchase a ticket first.')
+      setStoredMerkleData(null)
+    }
+  }
+
   useEffect(() => {
-    return () => {
-      if (qrCodeRef.current && isScanning) {
-        qrCodeRef.current.stop().catch(() => {})
-      }
+    // Load events from localStorage
+    const storedEvents: EventData[] = JSON.parse(localStorage.getItem('events') || '[]')
+    setEvents(storedEvents)
+    
+    // If initialEventName is provided, automatically load the merkle data
+    if (initialEventName) {
+      handleEventSelect(initialEventName)
     }
-  }, [isScanning])
-
-  const startScanning = async () => {
-    try {
-      setError('')
-      setIsScanning(true)
-
-      const qrCode = new Html5Qrcode(scannerId.current)
-      qrCodeRef.current = qrCode
-
-      await qrCode.start(
-        { facingMode: 'environment' },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 }
-        },
-        (decodedText) => {
-          handleQRCodeScanned(decodedText)
-        },
-        (_errorMessage) => {
-          // Ignore scanning errors
-        }
-      )
-    } catch (err) {
-      console.error('Error starting QR scanner:', err)
-      setError('Failed to start camera. Please check permissions.')
-      setIsScanning(false)
-    }
-  }
-
-  const stopScanning = async () => {
-    if (qrCodeRef.current) {
-      try {
-        await qrCodeRef.current.stop()
-        await qrCodeRef.current.clear()
-      } catch (err) {
-        console.error('Error stopping QR scanner:', err)
-      }
-      qrCodeRef.current = null
-    }
-    setIsScanning(false)
-  }
-
-  const handleQRCodeScanned = async (decodedText: string) => {
-    try {
-      await stopScanning()
-
-      // Parse the QR data - can be just merkleTree or merkleTree + personal data
-      const qrData: ScannedQRData | MerkleTree = JSON.parse(decodedText)
-
-      let merkleTree: MerkleTree
-      let root: string
-
-      // Check if it's the new format with personal data
-      if ('merkleTree' in qrData && qrData.merkleTree) {
-        merkleTree = qrData.merkleTree
-        // Generate merkleTreeRoot (in real scenario, this would be calculated from the tree)
-        root = '0x' + Math.random().toString(16).substr(2, 64)
-      } else {
-        // Old format: just merkleTree
-        merkleTree = qrData as MerkleTree
-        // Generate merkleTreeRoot
-        root = '0x' + Math.random().toString(16).substr(2, 64)
-      }
-
-      // Validate structure
-      if (!merkleTree.leaves || !merkleTree.nodes || !Array.isArray(merkleTree.leaves) || !Array.isArray(merkleTree.nodes)) {
-        setError('Invalid merkle tree format')
-        return
-      }
-
-      setScannedMerkleTree(merkleTree)
-      setMerkleTreeRoot(root)
-      setError('')
-    } catch (err) {
-      console.error('Error parsing QR code:', err)
-      setError('Invalid QR code format. Expected merkle tree JSON.')
-    }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialEventName])
 
   const toggleField = (field: SelectedField) => {
     setSelectedFields(prev => {
@@ -133,8 +82,8 @@ function MerklePathGenerator() {
   }
 
   const generateMerklePaths = () => {
-    if (!scannedMerkleTree || selectedFields.length === 0) {
-      setError('Please scan a QR code and select at least one field')
+    if (!storedMerkleData || selectedFields.length === 0) {
+      setError('Please select an event and at least one field')
       return
     }
 
@@ -153,7 +102,7 @@ function MerklePathGenerator() {
 
     // Create QR data with merkle paths and merkleTreeRoot
     const qrData = {
-      merkleTreeRoot: merkleTreeRoot,
+      merkleTreeRoot: storedMerkleData.merkleTreeRoot,
       merklePaths: merklePaths
     }
 
@@ -200,37 +149,34 @@ function MerklePathGenerator() {
       {!generatedQR && (
         <>
           <h1 className="title">Generate Credentials</h1>
-          <p className="subtitle">Scan the ticket QR generated after purchase and select the fields required for your credential.</p>
+          <p className="subtitle">Select an event and choose the fields required for your credential.</p>
         </>
       )}
 
-      {!scannedMerkleTree && (
-        <div className="scan-section">
-          <div className="scanner-container">
-            <div id={scannerId.current} className="scanner"></div>
-          </div>
+      {!storedMerkleData && !initialEventName && (
+        <div className="event-selection-section">
+          <h2 className="section-title">Select Event</h2>
+          <p className="section-subtitle">Choose an event for which you have purchased a ticket</p>
 
-          {!isScanning && (
-            <button
-              onClick={startScanning}
-              className="button button-primary"
-            >
-              Start Scanning
-            </button>
-          )}
-
-          {isScanning && (
-            <button
-              onClick={stopScanning}
-              className="button button-secondary"
-            >
-              Stop Scanning
-            </button>
+          {events.length === 0 ? (
+            <p className="no-events-message">No events available. Please purchase a ticket first.</p>
+          ) : (
+            <div className="events-list">
+              {events.map(event => (
+                <button
+                  key={event.name}
+                  onClick={() => handleEventSelect(event.name)}
+                  className={`event-button ${selectedEvent === event.name ? 'selected' : ''}`}
+                >
+                  {event.name}
+                </button>
+              ))}
+            </div>
           )}
         </div>
       )}
 
-      {scannedMerkleTree && !generatedQR && (
+      {storedMerkleData && !generatedQR && (
         <div className="selection-section">
           <h2 className="section-title">Select Fields</h2>
           <p className="section-subtitle">Choose which fields to generate credentials for</p>
@@ -248,13 +194,25 @@ function MerklePathGenerator() {
             ))}
           </div>
 
-          <button
-            onClick={generateMerklePaths}
-            disabled={selectedFields.length === 0}
-            className="button button-primary"
-          >
-            Generate Credentials
-          </button>
+          <div className="actions">
+            <button
+              onClick={() => {
+                setStoredMerkleData(null)
+                setSelectedEvent('')
+                setSelectedFields([])
+              }}
+              className="button button-secondary"
+            >
+              Change Event
+            </button>
+            <button
+              onClick={generateMerklePaths}
+              disabled={selectedFields.length === 0}
+              className="button button-primary"
+            >
+              Generate Credentials
+            </button>
+          </div>
         </div>
       )}
 

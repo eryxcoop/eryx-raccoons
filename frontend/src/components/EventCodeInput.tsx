@@ -4,7 +4,7 @@ import './EventCodeInput.css'
 
 interface EventCodeInputProps {
   onEventFound: (eventData: EventData) => void
-  onNavigateToMerklePath: () => void
+  onNavigateToMerklePath: (eventName: string) => void
 }
 
 function EventCodeInput({ onEventFound, onNavigateToMerklePath }: EventCodeInputProps) {
@@ -21,9 +21,9 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath }: EventCodeInput
     onEventFound(event)
   }
 
-  const handleGenerateMerklePaths = (e: React.MouseEvent) => {
+  const handleGenerateMerklePaths = (event: EventData, e: React.MouseEvent) => {
     e.stopPropagation()
-    onNavigateToMerklePath()
+    onNavigateToMerklePath(event.name)
   }
 
   const formatDate = (dateString: string) => {
@@ -88,7 +88,7 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath }: EventCodeInput
                 Purchase
               </button>
               <button
-                onClick={handleGenerateMerklePaths}
+                onClick={(e) => handleGenerateMerklePaths(event, e)}
                 className="button button-secondary card-button"
               >
                 Generate Credentials
