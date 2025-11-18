@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Home from './components/Home'
+import CreateEvent from './components/CreateEvent'
 import EventCodeInput from './components/EventCodeInput'
 import EventDetails from './components/EventDetails'
 import PersonalDataForm from './components/PersonalDataForm'
@@ -12,6 +13,8 @@ export interface EventData {
   name: string
   date: string
   price: number
+  capacity: number
+  description: string
 }
 
 export interface PersonalData {
@@ -33,7 +36,7 @@ export interface PurchaseResult {
   transactionID: string
 }
 
-type Step = 'home' | 'code-input' | 'event-details' | 'purchase-complete' | 'qr-validation' | 'merkle-path-generator'
+type Step = 'home' | 'create-event' | 'code-input' | 'event-details' | 'purchase-complete' | 'qr-validation' | 'merkle-path-generator'
 
 function App() {
   const [step, setStep] = useState<Step>('home')
@@ -68,13 +71,23 @@ function App() {
         {step === 'home' && (
           <Home
             onNavigateToPurchase={() => setStep('code-input')}
+            onNavigateToCreateEvent={() => setStep('create-event')}
             onNavigateToValidation={() => setStep('qr-validation')}
-            onNavigateToMerklePath={() => setStep('merkle-path-generator')}
+          />
+        )}
+        {step === 'create-event' && (
+          <CreateEvent
+            onEventCreated={() => {
+              alert('Event created successfully!')
+              setStep('home')
+            }}
+            onBack={handleBackToHome}
           />
         )}
         {step === 'code-input' && (
           <EventCodeInput
             onEventFound={handleEventFound}
+            onNavigateToMerklePath={() => setStep('merkle-path-generator')}
             onBack={handleBackToHome}
           />
         )}
