@@ -41,6 +41,8 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
       const purchaseResult: PurchaseResult = {
         merkleTree: merkleTree,
         merkleTreeRoot: merkleTreeRoot,
+        name: personalData.name,
+        email: personalData.email,
         documentNumber: personalData.documentNumber,
         birthDate: personalData.birthDate,
         merklePathDocument: generateMerklePath(),

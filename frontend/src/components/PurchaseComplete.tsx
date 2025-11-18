@@ -12,8 +12,15 @@ interface PurchaseCompleteProps {
 function PurchaseComplete({ purchaseResult, onReset, onBack }: PurchaseCompleteProps) {
   const qrRef = useRef<SVGSVGElement>(null)
 
-  // QR code only contains the merkleTree
-  const qrDataString = purchaseResult.merkleTree
+  // QR code contains the merkleTree and personal data
+  const qrData = {
+    merkleTree: JSON.parse(purchaseResult.merkleTree),
+    name: purchaseResult.name,
+    email: purchaseResult.email,
+    documentNumber: purchaseResult.documentNumber,
+    birthDate: purchaseResult.birthDate
+  }
+  const qrDataString = JSON.stringify(qrData)
 
   const handleDownload = () => {
     if (!qrRef.current) return

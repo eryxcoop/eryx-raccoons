@@ -24,6 +24,8 @@ export interface PersonalData {
 export interface PurchaseResult {
   merkleTree: string
   merkleTreeRoot: string
+  name: string
+  email: string
   documentNumber: string
   birthDate: string
   merklePathDocument: string[]

@@ -8,6 +8,14 @@ interface MerkleTree {
   nodes: string[]
 }
 
+interface ScannedQRData {
+  merkleTree?: MerkleTree
+  name?: string
+  email?: string
+  documentNumber?: string
+  birthDate?: string
+}
+
 interface MerklePathGeneratorProps {
   onBack: () => void
 }
@@ -17,6 +25,7 @@ type SelectedField = 'name' | 'email' | 'documentNumber' | 'birthDate'
 function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
   const [isScanning, setIsScanning] = useState(false)
   const [scannedMerkleTree, setScannedMerkleTree] = useState<MerkleTree | null>(null)
+  const [merkleTreeRoot, setMerkleTreeRoot] = useState<string>('')
   const [selectedFields, setSelectedFields] = useState<SelectedField[]>([])
   const [generatedQR, setGeneratedQR] = useState<string | null>(null)
   const [error, setError] = useState<string>('')
@@ -84,8 +93,23 @@ function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
     try {
       await stopScanning()
 
-      // Parse the merkleTree from QR
-      const merkleTree: MerkleTree = JSON.parse(decodedText)
+      // Parse the QR data - can be just merkleTree or merkleTree + personal data
+      const qrData: ScannedQRData | MerkleTree = JSON.parse(decodedText)
+
+      let merkleTree: MerkleTree
+      let root: string
+
+      // Check if it's the new format with personal data
+      if ('merkleTree' in qrData && qrData.merkleTree) {
+        merkleTree = qrData.merkleTree
+        // Generate merkleTreeRoot (in real scenario, this would be calculated from the tree)
+        root = '0x' + Math.random().toString(16).substr(2, 64)
+      } else {
+        // Old format: just merkleTree
+        merkleTree = qrData as MerkleTree
+        // Generate merkleTreeRoot
+        root = '0x' + Math.random().toString(16).substr(2, 64)
+      }
 
       // Validate structure
       if (!merkleTree.leaves || !merkleTree.nodes || !Array.isArray(merkleTree.leaves) || !Array.isArray(merkleTree.nodes)) {
@@ -94,6 +118,7 @@ function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
       }
 
       setScannedMerkleTree(merkleTree)
+      setMerkleTreeRoot(root)
       setError('')
     } catch (err) {
       console.error('Error parsing QR code:', err)
@@ -130,8 +155,9 @@ function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
       merklePaths[field] = generatePath()
     })
 
-    // Create QR data with merkle paths
+    // Create QR data with merkle paths and merkleTreeRoot
     const qrData = {
+      merkleTreeRoot: merkleTreeRoot,
       merklePaths: merklePaths
     }
 
@@ -175,6 +201,7 @@ function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
 
   const reset = () => {
     setScannedMerkleTree(null)
+    setMerkleTreeRoot('')
     setSelectedFields([])
     setGeneratedQR(null)
     setError('')
