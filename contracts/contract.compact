@@ -1,8 +1,8 @@
 pragma language_version >= 0.17.0;
 import CompactStandardLibrary;
 
-export ledger eventName: Opaque<"string">;
-export ledger eventDescription: Opaque<"string">;
+export ledger eventName: Bytes<1024>;
+export ledger eventDescription: Bytes<1024>;
 export ledger eventCapacity: Uint<32>;
 export ledger eventOwner: Bytes<32>;
 export ledger ticketPrice: Uint<32>;
@@ -10,9 +10,9 @@ export ledger ticketPrice: Uint<32>;
 export ledger soldTickets: List<MerkleTreeDigest>;
 
 witness secretKey(): Bytes<32>;
-witness findItem(item: Field): MerkleTreePath<10, Field>;
+//witness findItem(item: Field): MerkleTreePath<10, Field>;
 
-
+/*
 constructor(
     eventName_: Opaque<"string">,
     eventDescription_: Opaque<"string">,
@@ -23,6 +23,16 @@ constructor(
     eventDescription = disclose(eventDescription_);
     eventCapacity = disclose(eventCapacity_);
     ticketPrice = disclose(ticketPrice_);
+
+    eventOwner = disclose(publicKey(secretKey()));
+}
+*/
+
+constructor() {
+    eventName = pad(1024, "Oasis at River stadium");
+    eventDescription = pad(1024, "Oasis is back at the River Plate stadium in Buenos Aires!");
+    eventCapacity = 3;
+    ticketPrice = 10;
 
     eventOwner = disclose(publicKey(secretKey()));
 }
