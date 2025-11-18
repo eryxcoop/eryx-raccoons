@@ -1,5 +1,11 @@
-The following readme didn't use any kind of IA. It was all written by hand by me at 1am. 
 # CypherPass
+The following readme didn't use any kind of IA. It was all written by hand by me at 1am.
+
+## Introductory video
+You can find it [here](https://drive.google.com/drive/folders/1GtfeXogBiTVZcpU4SiYMjmMV3byZ_x3x).
+
+## Slides
+You can find it [here](https://docs.google.com/presentation/d/106aXyx-QP5s17lqpoJu8gsiDDbgUvRSECsaLDkEwy6w).
 
 ## Overview
 CypherPass is a protocol and application for buying tickets. This is usefull for music shows, congresses and any other event. 
