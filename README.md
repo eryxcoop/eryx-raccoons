@@ -14,6 +14,8 @@ This application is meant for 3 kinds of user:
 * The buyer, client or **atendee**: it buys the ticket and presents it at the venue for the check-in.
 * The **validator**: works for the venue and validates the atendees' tickets.
 
+We have a vision where no one has your location beforehand, or has to know more than the absolute necessary for you to access somewhere. Not having intermediaries also is an important source of privacy since you don't have to give personal information to a third party.
+
 ## Protocol detail
 1) The Organizer creates an **event**. An Event is defined by:
     * Name and description
@@ -34,16 +36,16 @@ After filling this form, the client will do 2 things:
 
 The ticket as such is composed by the client data, along with the event ID. However, from the validator's point of view, the ticket is the Merkle Root present in the public ledger. 
 
+3) The atendee arrives to the event. The validator in the door asks for some kind of identification. The atendee and the validator agree in the data that is required (for example, the atendee might only want to disclose its ID but not its email). They both pick in their sides of the app the fields that should be disclosed.
 
-<!-- * El dato que va a tener que ser revelado al llegar al evento
-* El merkle path de ese dato y
-* El merkle root del arbol creado
+On the atendee's side, this will do the following:
+* Create a Merkle Path for each of piece of disclosed information
+* Generate a QR code that contains the plain value and the merkle path for each disclosed piece of information, along with the Merkle Root.
 
-Esto representa la entrada del cliente. Sin embargo, para que sea válida tiene que "comprarla". No hay intermediarios: el cliente genera una transacción en Midnight donde los inputs privados son todos los datos del usuario. .  -->
+On the validator's side, this will open a camera to scan the atendee's QR code. The validation will succeed when all the Merkle Paths have been checked. But this is not enough: the validator also has to check that the ticket is on the public ledger, and mark it as used. 
 
+Only certain people can do this verification to avoid a malicious user to mark unused tickets as used, so the contract owner should also have the possibility to grant that role to one or many addresses. 
 
-3) El cliente llega al evento. El validator le pide el código QR y valida el merkle path offchain respecto al dato provisto y el merkle root. Hace una query al contrato para 
+## Business model and future projection
 
-    * Ver que efectivamente el merkle root está en el listado de entradas
-    * Marca la entrada como comprada
-
+## 
