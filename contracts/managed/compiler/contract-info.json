@@ -1,0 +1,83 @@
+{
+  "circuits": [
+    {
+      "name": "buyTicket",
+      "pure": false,
+      "arguments": [
+        {
+          "name": "merkleRoot",
+          "type": {
+            "type-name": "Struct",
+            "name": "MerkleTreeDigest",
+            "elements": [
+              {
+                "name": "field",
+                "type": {
+                  "type-name": "Field"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Uint",
+        "maxval": 18446744073709551615
+      }
+    },
+    {
+      "name": "checkTicket",
+      "pure": false,
+      "arguments": [
+        {
+          "name": "ticket",
+          "type": {
+            "type-name": "Struct",
+            "name": "MerkleTreeDigest",
+            "elements": [
+              {
+                "name": "field",
+                "type": {
+                  "type-name": "Field"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Boolean"
+      }
+    },
+    {
+      "name": "publicKey",
+      "pure": true,
+      "arguments": [
+        {
+          "name": "secret_key",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    }
+  ],
+  "witnesses": [
+    {
+      "name": "secretKey",
+      "arguments": [
+      ],
+      "result type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    }
+  ],
+  "contracts": [
+  ]
+}

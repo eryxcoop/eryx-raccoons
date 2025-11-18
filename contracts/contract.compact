@@ -1,8 +1,8 @@
 pragma language_version >= 0.17.0;
 import CompactStandardLibrary;
 
-export ledger eventName: Bytes<1024>;
-export ledger eventDescription: Bytes<1024>;
+export ledger eventName: Opaque<"string">;
+export ledger eventDescription: Opaque<"string">;
 export ledger eventCapacity: Uint<32>;
 export ledger eventOwner: Bytes<32>;
 export ledger ticketPrice: Uint<32>;
