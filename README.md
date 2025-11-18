@@ -20,7 +20,7 @@ We have a vision where no one has your location beforehand, or has to know more 
 1) The Organizer creates an **event**. An Event is defined by:
     * Name and description
     * Necessary client data (like full name, government id, passport, birth date or email). Note: not all of this data is necessarily gonna be disclosed.
-    * Amount of aviable spaces. A more complex and future implementation includes different kind of venue locations.
+    * Amount of aviable spaces. A more complex and future implementation includes different kind of venue locations (field, F23, etc.).
     * Price
 
 On the backend, this is going to deploy a Midnight smart contract with an owner (the creator of the event). This smart contract contains all the data relevant to the event, and the logic to manage the interactions that will be explained in the next sections. The important thing to have in mind is that the contract address must be published for everyone to see and buy tickets. 
@@ -30,7 +30,7 @@ On the backend, this is going to deploy a Midnight smart contract with an owner 
 After filling this form, the client will do 2 things:
 * Create a Merkle Tree on the client side. The leafs are the client data, in the order declared by the event (hence by the contract). A future implementation could improve security by mixing a secret salt along with each piece of information. 
 * Create a transaction meant to be validated by the event's contract. This transaction does 3 things:
-    * Subscribe the Merkle Root of the ticket to the public ledger. This will be used in the validation phase. This is a representation of the "secretly bought tickets for the event".
+    * Subscribe the Merkle Root of the ticket to the public ledger. This will be used in the validation phase. This is a representation of the "secretly bought tickets for the event". Note: in a future version the ideal is that the contract itself creates the Merkle Tree. This is because you might want to validate some fields, instead of letting the client-side choose everything. 
     * Pay for the ticket.
     * Subtract 1 from the available tickets (and fail if such amount is already 0).
 
