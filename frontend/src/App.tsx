@@ -9,6 +9,7 @@ import PurchaseComplete from './components/PurchaseComplete'
 import QRValidator from './components/QRValidator'
 import MerklePathGenerator from './components/MerklePathGenerator'
 import NavigationHeader from './components/NavigationHeader'
+import Logo from './components/Logo'
 import './App.css'
 
 export interface EventData {
@@ -95,8 +96,28 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <div className="container">
+    <>
+      <div className="background-decorations">
+        <span className="decoration decoration-1">c = m^e</span>
+        <span className="decoration decoration-2">(mod n)</span>
+        <span className="decoration decoration-3">H(x)</span>
+        <span className="decoration decoration-4">Merkle</span>
+        <span className="decoration decoration-5">256</span>
+        <span className="decoration decoration-6">ZK</span>
+        <span className="decoration decoration-7">∀x</span>
+        <span className="decoration decoration-8">∃y</span>
+        <span className="decoration decoration-9">π</span>
+        <span className="decoration decoration-10">e</span>
+        <span className="decoration decoration-11">φ(n)</span>
+        <span className="decoration decoration-12">SHA</span>
+        <span className="decoration decoration-13">H(x)</span>
+        <span className="decoration decoration-14">Merkle</span>
+        <span className="decoration decoration-15">256</span>
+        <span className="decoration decoration-16">ZK</span>
+      </div>
+      <Logo />
+      <div className="app-wrapper">
+        <div className="container">
         {step !== 'home' && (
           <NavigationHeader
             onHome={handleBackToHome}
@@ -152,8 +173,9 @@ function App() {
         {step === 'merkle-path-generator' && (
           <MerklePathGenerator />
         )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
