@@ -1,4 +1,4 @@
-contracts/
+contracts/managed/
 node_modules/
 .idea/
 package-lock.json
