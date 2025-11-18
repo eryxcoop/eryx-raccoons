@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import Home from './components/Home'
 import EventCodeInput from './components/EventCodeInput'
 import EventDetails from './components/EventDetails'
 import PersonalDataForm from './components/PersonalDataForm'
 import PurchaseComplete from './components/PurchaseComplete'
+import QRValidator from './components/QRValidator'
 import './App.css'
 
 export interface EventData {
@@ -27,10 +29,10 @@ export interface PurchaseResult {
   transactionID: string
 }
 
-type Step = 'code-input' | 'event-details' | 'purchase-complete'
+type Step = 'home' | 'code-input' | 'event-details' | 'purchase-complete' | 'qr-validation'
 
 function App() {
-  const [step, setStep] = useState<Step>('code-input')
+  const [step, setStep] = useState<Step>('home')
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | null>(null)
 
@@ -50,11 +52,26 @@ function App() {
     setPurchaseResult(null)
   }
 
+  const handleBackToHome = () => {
+    setStep('home')
+    setEventData(null)
+    setPurchaseResult(null)
+  }
+
   return (
     <div className="app">
       <div className="container">
+        {step === 'home' && (
+          <Home
+            onNavigateToPurchase={() => setStep('code-input')}
+            onNavigateToValidation={() => setStep('qr-validation')}
+          />
+        )}
         {step === 'code-input' && (
-          <EventCodeInput onEventFound={handleEventFound} />
+          <EventCodeInput
+            onEventFound={handleEventFound}
+            onBack={handleBackToHome}
+          />
         )}
         {step === 'event-details' && eventData && (
           <EventDetails
@@ -66,7 +83,11 @@ function App() {
           <PurchaseComplete
             purchaseResult={purchaseResult}
             onReset={handleReset}
+            onBack={handleBackToHome}
           />
+        )}
+        {step === 'qr-validation' && (
+          <QRValidator onBack={handleBackToHome} />
         )}
       </div>
     </div>

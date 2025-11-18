@@ -6,9 +6,10 @@ import './PurchaseComplete.css'
 interface PurchaseCompleteProps {
   purchaseResult: PurchaseResult
   onReset: () => void
+  onBack: () => void
 }
 
-function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
+function PurchaseComplete({ purchaseResult, onReset, onBack }: PurchaseCompleteProps) {
   const qrRef = useRef<SVGSVGElement>(null)
 
   // Create QR code data object
@@ -107,6 +108,9 @@ function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
         </button>
         <button onClick={onReset} className="button button-secondary">
           New Purchase
+        </button>
+        <button onClick={onBack} className="button button-secondary">
+          Back to Home
         </button>
       </div>
     </div>

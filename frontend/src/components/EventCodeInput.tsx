@@ -4,9 +4,10 @@ import './EventCodeInput.css'
 
 interface EventCodeInputProps {
   onEventFound: (eventData: EventData) => void
+  onBack: () => void
 }
 
-function EventCodeInput({ onEventFound }: EventCodeInputProps) {
+function EventCodeInput({ onEventFound, onBack }: EventCodeInputProps) {
   const [eventCode, setEventCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -64,6 +65,13 @@ function EventCodeInput({ onEventFound }: EventCodeInputProps) {
           {isLoading ? 'Searching...' : 'Search Event'}
         </button>
       </form>
+
+      <button
+        onClick={onBack}
+        className="button button-secondary back-button"
+      >
+        Back to Home
+      </button>
     </div>
   )
 }
