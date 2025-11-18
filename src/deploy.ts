@@ -51,108 +51,113 @@ const waitForFunds = (wallet: Wallet) =>
         )
     );
 
+async function setup() {
+    let walletSeed: string;
+    // Use existing seed
+    walletSeed = "d2667c632a3728b606aa290463d62035c2c905e0091a3a9a38ff2fdfc1a8c31e";
+
+    // Build wallet from seed
+    console.log("Building wallet...");
+    const wallet = await WalletBuilder.buildFromSeed(
+        TESTNET_CONFIG.indexer,
+        TESTNET_CONFIG.indexerWS,
+        TESTNET_CONFIG.proofServer,
+        TESTNET_CONFIG.node,
+        walletSeed,
+        getZswapNetworkId(),
+        "info"
+    );
+
+    wallet.start();
+    const state = await Rx.firstValueFrom(wallet.state());
+
+    console.log(`Your wallet address is: ${state.address}`);
+
+    let balance = state.balances[nativeToken()] || 0n;
+
+    if (balance === 0n) {
+        console.log(`Your wallet balance is: 0`);
+        console.log("Visit: https://midnight.network/test-faucet to get some funds.");
+        console.log(`Waiting to receive tokens...`);
+        balance = await waitForFunds(wallet);
+    }
+
+    console.log(`Balance: ${balance}`);
+
+    // Load compiled contract files
+    console.log("Loading contract...");
+    const contractPath = path.join(process.cwd(), "contracts");
+    const contractModulePath = path.join(
+        contractPath,
+        "managed",
+        "contract",
+        "contract",
+        "index.cjs"
+    );
+
+    if (!fs.existsSync(contractModulePath)) {
+        console.error("Contract not found! Run: npm run compile");
+        process.exit(1);
+    }
+
+    const ContractModule = await import(contractModulePath);
+    const witness = {
+        secretKey: ({privateState}: any): any => [privateState, privateState.secretKey],
+    };
+    const contractInstance = new ContractModule.Contract(witness);
+
+    // Create wallet provider for transactions
+    const walletState = await Rx.firstValueFrom(wallet.state());
+
+    const walletProvider = {
+        coinPublicKey: walletState.coinPublicKey,
+        encryptionPublicKey: walletState.encryptionPublicKey,
+        balanceTx(tx: any, newCoins: any) {
+            return wallet
+                .balanceTransaction(
+                    ZswapTransaction.deserialize(
+                        tx.serialize(getLedgerNetworkId()),
+                        getZswapNetworkId()
+                    ),
+                    newCoins
+                )
+                .then((tx) => wallet.proveTransaction(tx))
+                .then((zswapTx) =>
+                    Transaction.deserialize(
+                        zswapTx.serialize(getZswapNetworkId()),
+                        getLedgerNetworkId()
+                    )
+                )
+                .then(createBalancedTx);
+        },
+        submitTx(tx: any) {
+            return wallet.submitTransaction(tx);
+        },
+    };
+
+    // Configure all required providers
+    console.log("Setting up providers...");
+    const providers = {
+        privateStateProvider: levelPrivateStateProvider({
+            privateStateStoreName: "contract-state",
+        }),
+        publicDataProvider: indexerPublicDataProvider(
+            TESTNET_CONFIG.indexer,
+            TESTNET_CONFIG.indexerWS
+        ),
+        zkConfigProvider: new NodeZkConfigProvider(path.join(contractPath, "managed", "contract")),
+        proofProvider: httpClientProofProvider(TESTNET_CONFIG.proofServer),
+        walletProvider: walletProvider,
+        midnightProvider: walletProvider,
+    };
+    return {wallet, contractInstance, providers};
+}
+
 async function main() {
     console.log("Midnight Ticket system Deployment\n");
 
     try {
-        let walletSeed: string;
-        // Use existing seed
-        walletSeed = "d2667c632a3728b606aa290463d62035c2c905e0091a3a9a38ff2fdfc1a8c31e";
-
-        // Build wallet from seed
-        console.log("Building wallet...");
-        const wallet = await WalletBuilder.buildFromSeed(
-            TESTNET_CONFIG.indexer,
-            TESTNET_CONFIG.indexerWS,
-            TESTNET_CONFIG.proofServer,
-            TESTNET_CONFIG.node,
-            walletSeed,
-            getZswapNetworkId(),
-            "info"
-        );
-
-        wallet.start();
-        const state = await Rx.firstValueFrom(wallet.state());
-
-        console.log(`Your wallet address is: ${state.address}`);
-
-        let balance = state.balances[nativeToken()] || 0n;
-
-        if (balance === 0n) {
-            console.log(`Your wallet balance is: 0`);
-            console.log("Visit: https://midnight.network/test-faucet to get some funds.");
-            console.log(`Waiting to receive tokens...`);
-            balance = await waitForFunds(wallet);
-        }
-
-        console.log(`Balance: ${balance}`);
-
-        // Load compiled contract files
-        console.log("Loading contract...");
-        const contractPath = path.join(process.cwd(), "contracts");
-        const contractModulePath = path.join(
-            contractPath,
-            "managed",
-            "contract",
-            "contract",
-            "index.cjs"
-        );
-
-        if (!fs.existsSync(contractModulePath)) {
-            console.error("Contract not found! Run: npm run compile");
-            process.exit(1);
-        }
-
-        const ContractModule = await import(contractModulePath);
-        const witness = {
-            secretKey: ({privateState}: any): any => [privateState, privateState.secretKey],
-        };
-        const contractInstance = new ContractModule.Contract(witness);
-
-        // Create wallet provider for transactions
-        const walletState = await Rx.firstValueFrom(wallet.state());
-
-        const walletProvider = {
-            coinPublicKey: walletState.coinPublicKey,
-            encryptionPublicKey: walletState.encryptionPublicKey,
-            balanceTx(tx: any, newCoins: any) {
-                return wallet
-                    .balanceTransaction(
-                        ZswapTransaction.deserialize(
-                            tx.serialize(getLedgerNetworkId()),
-                            getZswapNetworkId()
-                        ),
-                        newCoins
-                    )
-                    .then((tx) => wallet.proveTransaction(tx))
-                    .then((zswapTx) =>
-                        Transaction.deserialize(
-                            zswapTx.serialize(getZswapNetworkId()),
-                            getLedgerNetworkId()
-                        )
-                    )
-                    .then(createBalancedTx);
-            },
-            submitTx(tx: any) {
-                return wallet.submitTransaction(tx);
-            },
-        };
-
-        // Configure all required providers
-        console.log("Setting up providers...");
-        const providers = {
-            privateStateProvider: levelPrivateStateProvider({
-                privateStateStoreName: "contract-state",
-            }),
-            publicDataProvider: indexerPublicDataProvider(
-                TESTNET_CONFIG.indexer,
-                TESTNET_CONFIG.indexerWS
-            ),
-            zkConfigProvider: new NodeZkConfigProvider(path.join(contractPath, "managed", "contract")),
-            proofProvider: httpClientProofProvider(TESTNET_CONFIG.proofServer),
-            walletProvider: walletProvider,
-            midnightProvider: walletProvider,
-        };
+        const {wallet, contractInstance, providers} = await setup();
 
         // Deploy contract to blockchain
         console.log("Deploying contract (30-60 seconds)...");
