@@ -71,9 +71,8 @@ function App() {
         {step === 'home' && (
           <Home
             onNavigateToPurchase={() => setStep('code-input')}
-            onNavigateToValidation={() => setStep('qr-validation')}
-            onNavigateToMerklePath={() => setStep('merkle-path-generator')}
             onNavigateToCreateEvent={() => setStep('create-event')}
+            onNavigateToValidation={() => setStep('qr-validation')}
           />
         )}
         {step === 'create-event' && (
@@ -88,6 +87,7 @@ function App() {
         {step === 'code-input' && (
           <EventCodeInput
             onEventFound={handleEventFound}
+            onNavigateToMerklePath={() => setStep('merkle-path-generator')}
             onBack={handleBackToHome}
           />
         )}

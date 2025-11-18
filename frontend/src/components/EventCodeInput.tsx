@@ -4,13 +4,12 @@ import './EventCodeInput.css'
 
 interface EventCodeInputProps {
   onEventFound: (eventData: EventData) => void
+  onNavigateToMerklePath: () => void
   onBack: () => void
 }
 
-function EventCodeInput({ onEventFound, onBack }: EventCodeInputProps) {
-  const [selectedEventId, setSelectedEventId] = useState('')
+function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventCodeInputProps) {
   const [events, setEvents] = useState<EventData[]>([])
-  const [error, setError] = useState('')
 
   useEffect(() => {
     // Load events from localStorage
@@ -18,23 +17,31 @@ function EventCodeInput({ onEventFound, onBack }: EventCodeInputProps) {
     setEvents(storedEvents)
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!selectedEventId) {
-      setError('Please select an event')
-      return
-    }
+  const handlePurchase = (event: EventData, e: React.MouseEvent) => {
+    e.stopPropagation()
+    onEventFound(event)
+  }
 
-    const selectedEvent = events.find(event => event.name === selectedEventId)
+  const handleGenerateMerklePaths = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onNavigateToMerklePath()
+  }
 
-    if (!selectedEvent) {
-      setError('Event not found')
-      return
-    }
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  }
 
-    setError('')
-    onEventFound(selectedEvent)
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(price)
   }
 
   if (events.length === 0) {
@@ -56,38 +63,47 @@ function EventCodeInput({ onEventFound, onBack }: EventCodeInputProps) {
   return (
     <div className="event-code-input">
       <h1 className="title">Ticket Purchase</h1>
-      <p className="subtitle">Select an event to continue</p>
+      <p className="subtitle">Select an event to purchase tickets or generate merkle paths</p>
       
-      <form onSubmit={handleSubmit} className="form">
-        <div className="input-group">
-          <label htmlFor="eventSelect">Select Event</label>
-          <select
-            id="eventSelect"
-            value={selectedEventId}
-            onChange={(e) => {
-              setSelectedEventId(e.target.value)
-              setError('')
-            }}
-            className="input"
+      <div className="events-grid">
+        {events.map((event) => (
+          <div
+            key={event.name}
+            className="event-card"
           >
-            <option value="">-- Select an event --</option>
-            {events.map((event) => (
-              <option key={event.name} value={event.name}>
-                {event.name}
-              </option>
-            ))}
-          </select>
-          {error && <span className="error-message">{error}</span>}
-        </div>
-
-        <button
-          type="submit"
-          disabled={!selectedEventId}
-          className="button button-primary"
-        >
-          Continue
-        </button>
-      </form>
+            <h3 className="event-card-name">{event.name}</h3>
+            <p className="event-card-description">{event.description}</p>
+            <div className="event-card-details">
+              <div className="event-card-detail">
+                <span className="detail-label">Date:</span>
+                <span className="detail-value">{formatDate(event.date)}</span>
+              </div>
+              <div className="event-card-detail">
+                <span className="detail-label">Capacity:</span>
+                <span className="detail-value">{event.capacity.toLocaleString()}</span>
+              </div>
+              <div className="event-card-detail">
+                <span className="detail-label">Price:</span>
+                <span className="detail-value price">{formatPrice(event.price)}</span>
+              </div>
+            </div>
+            <div className="event-card-actions">
+              <button
+                onClick={(e) => handlePurchase(event, e)}
+                className="button button-primary card-button"
+              >
+                Purchase
+              </button>
+              <button
+                onClick={handleGenerateMerklePaths}
+                className="button button-secondary card-button"
+              >
+                Generate Merkle Paths
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       <button
         onClick={onBack}
