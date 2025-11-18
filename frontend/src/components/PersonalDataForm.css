@@ -27,26 +27,26 @@
 .input-group label {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.3px;
 }
 
 .input {
   width: 100%;
   padding: 14px 18px;
-  border: 2px solid var(--border-color);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
   font-size: 16px;
   transition: all 0.2s ease;
-  background: var(--bg-white);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
   font-family: inherit;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(90, 116, 252, 0.2);
   transform: translateY(-1px);
 }
 
@@ -73,24 +73,32 @@
 }
 
 .error-message {
-  color: var(--error-color);
+  color: #f23f62;
   font-size: 13px;
-  margin-top: 4px;
-  font-weight: 500;
+  margin-top: 6px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  background: rgba(34, 8, 68, 0.85);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #f23f62;
+  box-shadow: 0 2px 8px rgba(242, 63, 98, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .error-message::before {
   content: '⚠';
-  font-size: 14px;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .button {
-  padding: 16px 32px;
+  padding: 18px 32px;
   border: none;
-  border-radius: 12px;
+  border-radius: 999px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -100,8 +108,8 @@
 }
 
 .button-primary {
-  background: var(--primary-gradient);
-  color: white;
+  background: #ffffff;
+  color: var(--primary-dark);
   box-shadow: var(--shadow-md);
 }
 

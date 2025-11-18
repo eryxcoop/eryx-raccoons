@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Home from './components/Home'
 import CreateEvent from './components/CreateEvent'
 import EventCodeInput from './components/EventCodeInput'
 import OrganizerView from './components/OrganizerView'
 import EventDetails from './components/EventDetails'
-import PersonalDataForm from './components/PersonalDataForm'
 import PurchaseComplete from './components/PurchaseComplete'
 import QRValidator from './components/QRValidator'
 import MerklePathGenerator from './components/MerklePathGenerator'
 import NavigationHeader from './components/NavigationHeader'
+import Logo from './components/Logo'
+import Toast from './components/Toast'
 import './App.css'
 
 export interface EventData {
@@ -46,6 +47,13 @@ function App() {
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | null>(null)
   const [createEventFrom, setCreateEventFrom] = useState<'home' | 'organizer'>('home')
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!toastMessage) return
+    const timer = setTimeout(() => setToastMessage(null), 3000)
+    return () => clearTimeout(timer)
+  }, [toastMessage])
 
   const navigateTo = (newStep: Step) => {
     if (step !== 'home' && step !== newStep) {
@@ -95,15 +103,36 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <div className="container">
-        {step !== 'home' && (
-          <NavigationHeader
-            onHome={handleBackToHome}
-            onBack={handleBack}
-            showBack={history.length > 0}
-          />
-        )}
+    <>
+      <div className="background-decorations">
+        <span className="decoration decoration-1">c = m^e</span>
+        <span className="decoration decoration-2">(mod n)</span>
+        <span className="decoration decoration-3">H(x)</span>
+        <span className="decoration decoration-4">Merkle</span>
+        <span className="decoration decoration-5">256</span>
+        <span className="decoration decoration-6">ZK</span>
+        <span className="decoration decoration-7">∀x</span>
+        <span className="decoration decoration-8">∃y</span>
+        <span className="decoration decoration-9">π</span>
+        <span className="decoration decoration-10">e</span>
+        <span className="decoration decoration-11">φ(n)</span>
+        <span className="decoration decoration-12">SHA</span>
+        <span className="decoration decoration-13">H(x)</span>
+        <span className="decoration decoration-14">Merkle</span>
+        <span className="decoration decoration-15">256</span>
+        <span className="decoration decoration-16">ZK</span>
+      </div>
+      <Logo />
+      {step !== 'home' && (
+        <NavigationHeader
+          onHome={handleBackToHome}
+          onBack={handleBack}
+          showBack={history.length > 0}
+        />
+      )}
+      {toastMessage && <Toast message={toastMessage} />}
+      <div className="app-wrapper">
+        <div className="container">
         {step === 'home' && (
           <Home
             onNavigateToPurchase={() => navigateTo('code-input')}
@@ -113,7 +142,7 @@ function App() {
         {step === 'create-event' && (
           <CreateEvent
             onEventCreated={() => {
-              alert('Event created successfully!')
+              setToastMessage('Event saved! It is now available for attendees.')
               setStep(createEventFrom === 'organizer' ? 'organizer-view' : 'home')
               setHistory([])
             }}
@@ -152,8 +181,9 @@ function App() {
         {step === 'merkle-path-generator' && (
           <MerklePathGenerator />
         )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

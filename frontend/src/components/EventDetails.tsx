@@ -47,7 +47,7 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
         birthDate: personalData.birthDate,
         merklePathDocument: generateMerklePath(),
         merklePathBirthDate: generateMerklePath(),
-        transactionID: 'TXN-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase()
+        transactionID: 'mn_shield-addr_test1kjwksfp8x2tachehsfvufsdl35ljg5cxzdcysjdn6ntadspyxn3qxqrxypgjm055c2azrpuyn7un0ge2vm25vkfv38d24rj3ewcku5wmdc94gjr9'
       }
 
       setIsPurchasing(false)
@@ -81,17 +81,17 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
         <div className="event-description">
           <p>{eventData.description}</p>
         </div>
-        <div className="event-info-row">
-          <span className="info-label">Date:</span>
-          <span className="info-value">{formatDate(eventData.date)}</span>
+        <div className="event-detail-row">
+          <span className="event-detail-label">Date:</span>
+          <span className="event-detail-value">{formatDate(eventData.date)}</span>
         </div>
-        <div className="event-info-row">
-          <span className="info-label">Capacity:</span>
-          <span className="info-value">{eventData.capacity.toLocaleString()} tickets</span>
+        <div className="event-detail-row">
+          <span className="event-detail-label">Capacity:</span>
+          <span className="event-detail-value">{eventData.capacity.toLocaleString()} tickets</span>
         </div>
-        <div className="event-info-row">
-          <span className="info-label">Price:</span>
-          <span className="info-value price">{formatPrice(eventData.price)}</span>
+        <div className="event-detail-row">
+          <span className="event-detail-label">Price:</span>
+          <span className="event-detail-value price">{formatPrice(eventData.price)}</span>
         </div>
       </div>
 

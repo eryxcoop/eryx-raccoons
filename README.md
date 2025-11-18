@@ -5,7 +5,7 @@ The following readme didn't use any kind of IA. It was all written by hand by me
 CypherPass is a protocol and application for buying tickets. This is usefull for music shows, congresses and any other event. 
 
 * CypherPass eliminates intermediaries like PassLine, Ticketek, etc. by allowing a smart contract to process the purchases.
-* CypherPass prevents ticket re-selling by associating a ticket with credential identity, like DNI, Passport or email. 
+* CypherPass prevents ticket re-selling by associating a ticket with credential identity, like National ID, Passport or email. 
 * CypherPass doesn't show anyone (not even the event organizer) who's the buyer and attendee.
 * The user only reveals the required data (DNI) at the venue, required by a validator at the moment of check-in. 
 

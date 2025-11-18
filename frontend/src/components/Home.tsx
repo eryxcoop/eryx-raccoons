@@ -8,7 +8,6 @@ interface HomeProps {
 function Home({ onNavigateToPurchase, onNavigateToOrganizer }: HomeProps) {
   return (
     <div className="home">
-      <h1 className="title">CipherPass</h1>
       <p className="subtitle">
         Empowering people to buy tickets directly—no intermediaries, no oversharing.
       </p>
