@@ -1,0 +1,81 @@
+.navigation-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  margin-top: -8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-white);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-left: -48px;
+  margin-right: -48px;
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+@media (max-width: 768px) {
+  .navigation-header {
+    margin-left: -24px;
+    margin-right: -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.nav-button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.nav-button:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.nav-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.nav-button svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.home-button {
+  color: #3b82f6;
+}
+
+.home-button:hover {
+  color: #2563eb;
+}
+
+.back-button {
+  color: #4b5563;
+}
+
+.back-button:hover {
+  color: #374151;
+}
+

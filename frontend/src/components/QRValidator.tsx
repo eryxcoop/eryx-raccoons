@@ -12,11 +12,7 @@ interface QRData {
   }
 }
 
-interface QRValidatorProps {
-  onBack: () => void
-}
-
-function QRValidator({ onBack }: QRValidatorProps) {
+function QRValidator() {
   const [isScanning, setIsScanning] = useState(false)
   const [validationResult, setValidationResult] = useState<'success' | 'error' | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -171,13 +167,6 @@ function QRValidator({ onBack }: QRValidatorProps) {
           </button>
         </div>
       )}
-
-      <button
-        onClick={onBack}
-        className="button button-secondary back-button"
-      >
-        Back to Home
-      </button>
     </div>
   )
 }

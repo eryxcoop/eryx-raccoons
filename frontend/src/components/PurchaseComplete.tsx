@@ -6,10 +6,9 @@ import './PurchaseComplete.css'
 interface PurchaseCompleteProps {
   purchaseResult: PurchaseResult
   onReset: () => void
-  onBack: () => void
 }
 
-function PurchaseComplete({ purchaseResult, onReset, onBack }: PurchaseCompleteProps) {
+function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
   const qrRef = useRef<SVGSVGElement>(null)
 
   // QR code contains the merkleTree and personal data
@@ -107,9 +106,6 @@ function PurchaseComplete({ purchaseResult, onReset, onBack }: PurchaseCompleteP
         </button>
         <button onClick={onReset} className="button button-secondary">
           New Purchase
-        </button>
-        <button onClick={onBack} className="button button-secondary">
-          Back to Home
         </button>
       </div>
     </div>

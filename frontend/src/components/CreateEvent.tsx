@@ -4,10 +4,9 @@ import './CreateEvent.css'
 
 interface CreateEventProps {
   onEventCreated: () => void
-  onBack: () => void
 }
 
-function CreateEvent({ onEventCreated, onBack }: CreateEventProps) {
+function CreateEvent({ onEventCreated }: CreateEventProps) {
   const [formData, setFormData] = useState({
     name: '',
     capacity: '',
@@ -187,10 +186,6 @@ function CreateEvent({ onEventCreated, onBack }: CreateEventProps) {
           Create Event
         </button>
       </form>
-
-      <button onClick={onBack} className="button button-secondary back-button">
-        Back to Home
-      </button>
     </div>
   )
 }
