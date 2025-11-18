@@ -1,4 +1,4 @@
-# Eryx Raccoons - Frontend
+# CypherPass - Frontend
 
 React TypeScript frontend for event ticket purchase.
 

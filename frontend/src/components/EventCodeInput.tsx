@@ -91,7 +91,7 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath }: EventCodeInput
                 onClick={handleGenerateMerklePaths}
                 className="button button-secondary card-button"
               >
-                Generate Merkle Paths
+                Generate Credentials
               </button>
             </div>
           </div>

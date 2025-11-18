@@ -8,7 +8,7 @@ interface HomeProps {
 function Home({ onNavigateToPurchase, onNavigateToOrganizer }: HomeProps) {
   return (
     <div className="home">
-      <h1 className="title">Eryx Raccoons</h1>
+      <h1 className="title">CypherPass</h1>
       <p className="subtitle">Ticket Management System</p>
       
       <div className="actions">
