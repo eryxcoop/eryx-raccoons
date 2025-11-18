@@ -116,15 +116,15 @@ function App() {
         <span className="decoration decoration-16">ZK</span>
       </div>
       <Logo />
+      {step !== 'home' && (
+        <NavigationHeader
+          onHome={handleBackToHome}
+          onBack={handleBack}
+          showBack={history.length > 0}
+        />
+      )}
       <div className="app-wrapper">
         <div className="container">
-        {step !== 'home' && (
-          <NavigationHeader
-            onHome={handleBackToHome}
-            onBack={handleBack}
-            showBack={history.length > 0}
-          />
-        )}
         {step === 'home' && (
           <Home
             onNavigateToPurchase={() => navigateTo('code-input')}

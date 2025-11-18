@@ -47,7 +47,7 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
         birthDate: personalData.birthDate,
         merklePathDocument: generateMerklePath(),
         merklePathBirthDate: generateMerklePath(),
-        transactionID: 'TXN-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase()
+        transactionID: 'mn_shield-addr_test1kjwksfp8x2tachehsfvufsdl35ljg5cxzdcysjdn6ntadspyxn3qxqrxypgjm055c2azrpuyn7un0ge2vm25vkfv38d24rj3ewcku5wmdc94gjr9'
       }
 
       setIsPurchasing(false)
