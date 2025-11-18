@@ -51,7 +51,7 @@ const waitForFunds = (wallet: Wallet) =>
         )
     );
 
-async function setup() {
+async function setup(witness: any) {
     let walletSeed: string;
     // Use existing seed
     walletSeed = "d2667c632a3728b606aa290463d62035c2c905e0091a3a9a38ff2fdfc1a8c31e";
@@ -101,9 +101,7 @@ async function setup() {
     }
 
     const ContractModule = await import(contractModulePath);
-    const witness = {
-        secretKey: ({privateState}: any): any => [privateState, privateState.secretKey],
-    };
+
     const contractInstance = new ContractModule.Contract(witness);
 
     // Create wallet provider for transactions
@@ -157,7 +155,10 @@ async function main() {
     console.log("Midnight Ticket system Deployment\n");
 
     try {
-        const {wallet, contractInstance, providers} = await setup();
+        const witness = {
+            secretKey: ({privateState}: any): any => [privateState, privateState.secretKey],
+        };
+        const {wallet, contractInstance, providers} = await setup(witness);
 
         // Deploy contract to blockchain
         console.log("Deploying contract (30-60 seconds)...");
