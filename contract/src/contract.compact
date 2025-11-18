@@ -7,6 +7,7 @@ export ledger eventDescription: opaque<string>;
 export ledger eventName: opaque<string>;
 export ledger eventCapacity: Field;
 export ledger eventOwner: Bytes<32>;
+export ledger ticketPrice: Field;
 
 witness secretKey(): Bytes<32>;
 witness findItem(item: Field): MerkleTreePath<10, Field>;
@@ -20,19 +21,34 @@ constructor(
     eventDescription_: opaque<string>;
     eventName_: opaque<string>;
     eventCapacity_: Field;
+    ticketPrice_: Field;
 ) {
-    amountOfDataRequired = amountOfDataRequired_
-    fieldsOfDataRequired = fieldsOfDataRequired_
-    eventDescription = eventDescription_
-    eventName = eventName_
-    eventCapacity = eventCapacity_
+    amountOfDataRequired = amountOfDataRequired_;
+    fieldsOfDataRequired = fieldsOfDataRequired_;
+    eventDescription = eventDescription_;
+    eventName = eventName_;
+    eventCapacity = eventCapacity_;
+    ticketPrice = ticketPrice_;
     eventOwner = disclose(publicKey(secretKey()));
 }
 
 export circuit buyTicket: (
     fieldData: List<Field>,
-
 ){
+    // assert capacity > 0
+    assert(eventCapacity > 0, "There are no more tickets left.");
+    // capacity = capacity-1;
+    eventCapacity -= 1;
+
+    // assert list length is == amountOfDataRequired
+    assert(fieldData.length() == amountOfDataRequired, "Wrong amount of data provided.");
+
+    // Pay the ticket price to the owner
+    builtin.send(ticketPrice, eventOwner);
+
+    // Construct the Merkle root and return it
+    const tree = new MerkleTree<2, Field>();
+    
 
 }
 
