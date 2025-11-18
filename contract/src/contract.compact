@@ -1,8 +1,8 @@
 pragma language_version >= 0.17.0;
 import CompactStandardLibrary;
 
-export ledger eventDescription: Opaque<"String">;
-export ledger eventName: Opaque<"String">;
+export ledger eventName: Opaque<"string">;
+export ledger eventDescription: Opaque<"string">;
 export ledger eventCapacity: Uint<32>;
 export ledger eventOwner: Bytes<32>;
 export ledger ticketPrice: Uint<32>;
@@ -12,40 +12,39 @@ witness findItem(item: Field): MerkleTreePath<10, Field>;
 
 
 constructor(
+    eventName_: Opaque<"string">,
+    eventDescription_: Opaque<"string">,
     eventCapacity_: Uint<32>,
-    ticketPrice_: Field,
+    ticketPrice_: Uint<32>,
 ) {
+    eventName = disclose(eventName_);
+    eventDescription = disclose(eventDescription_);
     eventCapacity = disclose(eventCapacity_);
-    ticketPrice = ticketPrice_;
-    eventOwner = publicKey(disclose(secretKey()));
+    ticketPrice = disclose(ticketPrice_);
+
+    eventOwner = disclose(publicKey(secretKey()));
 }
 
 export circuit buyTicket(
-    id: Bytes<30>, name: Bytes<30>, age: Field, email: Bytes<30>
+    id: Bytes<32>, name: Bytes<32>, age: Bytes<32>, email: Bytes<32>,
+    merklePath: MerkleTreePath<2,Bytes<32>>
 ): Boolean {
-    assert capacity > 0
     assert(eventCapacity > 0, "There are no more tickets left.");
-    capacity = capacity-1;
     eventCapacity = eventCapacity - 1;
 
-    assert list length is == amountOfDataRequired
-    assert(fieldData.length() == amountOfDataRequired, "Wrong amount of data provided.");
+    // Ideally, pay the ticket price to the owner of the contract
 
-    Pay the ticket price to the owner
-    builtin.send(ticketPrice, eventOwner);
-
-    Construct the Merkle root and return it
-    const tree = new MerkleTree<2, Field>();
+    // Construct the Merkle root and return it
     
     return true;
 }
 
 
-export circuit check(credential: MerkleTree<4, Field>, item: Field): [] {
-  // Verify owner signature
-  const path = findItem(disclose(item));
-  assert(items.checkRoot(merkleTreePathRoot<10, Field>(disclose(path))), "path must be valid");
-}
+// export circuit check(credential: MerkleTree<4, Field>, item: Field): [] {
+//   // Verify owner signature
+//   const path = findItem(disclose(item));
+//   assert(items.checkRoot(merkleTreePathRoot<10, Field>(disclose(path))), "path must be valid");
+// }
 
 export circuit publicKey(secret_key: Bytes<32>): Bytes<32> {
     return persistentHash<[Bytes<32>, Bytes<32>]>([pad(32, "trash"), secret_key]);
