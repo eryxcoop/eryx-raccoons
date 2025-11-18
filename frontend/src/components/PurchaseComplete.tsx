@@ -1,3 +1,4 @@
+import { QRCodeSVG } from 'qrcode.react'
 import { PurchaseResult } from '../App'
 import './PurchaseComplete.css'
 
@@ -7,8 +8,19 @@ interface PurchaseCompleteProps {
 }
 
 function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
+  // Create QR code data object
+  const qrData = {
+    merkleTreeRoot: purchaseResult.merkleTreeRoot,
+    documentNumber: purchaseResult.documentNumber,
+    birthDate: purchaseResult.birthDate,
+    merklePathDocument: purchaseResult.merklePathDocument,
+    merklePathBirthDate: purchaseResult.merklePathBirthDate
+  }
+
+  const qrDataString = JSON.stringify(qrData)
+
   const handleDownload = () => {
-    const jsonData = JSON.stringify(purchaseResult, null, 2)
+    const jsonData = JSON.stringify(qrData, null, 2)
     const blob = new Blob([jsonData], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -51,16 +63,22 @@ function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
         </div>
       </div>
 
-      <div className="json-preview">
-        <h3 className="json-title">Purchase Data</h3>
-        <pre className="json-content">
-          {JSON.stringify(purchaseResult, null, 2)}
-        </pre>
+      <div className="qr-container">
+        <h3 className="qr-title">Your Ticket QR Code</h3>
+        <p className="qr-subtitle">Scan this QR code to verify your ticket</p>
+        <div className="qr-code-wrapper">
+          <QRCodeSVG
+            value={qrDataString}
+            size={256}
+            level="H"
+            includeMargin={true}
+          />
+        </div>
       </div>
 
       <div className="actions">
         <button onClick={handleDownload} className="button button-primary">
-          Download JSON
+          Download Data
         </button>
         <button onClick={onReset} className="button button-secondary">
           New Purchase

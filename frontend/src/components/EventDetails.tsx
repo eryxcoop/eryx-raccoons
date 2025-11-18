@@ -11,6 +11,14 @@ interface EventDetailsProps {
 function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
   const [isPurchasing, setIsPurchasing] = useState(false)
 
+  const generateMerklePath = (): string[] => {
+    // Generate mock merkle path (array of hashes)
+    const pathLength = Math.floor(Math.random() * 5) + 3 // 3-7 hashes
+    return Array.from({ length: pathLength }, () => 
+      '0x' + Math.random().toString(16).substr(2, 64)
+    )
+  }
+
   const handlePurchase = async (personalData: PersonalData) => {
     setIsPurchasing(true)
 
@@ -18,18 +26,11 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
     setTimeout(() => {
       // Generate mock purchase data
       const purchaseResult: PurchaseResult = {
-        merkleTree: JSON.stringify({
-          leaves: [
-            '0x' + Math.random().toString(16).substr(2, 64),
-            '0x' + Math.random().toString(16).substr(2, 64),
-            '0x' + Math.random().toString(16).substr(2, 64)
-          ],
-          nodes: [
-            '0x' + Math.random().toString(16).substr(2, 64),
-            '0x' + Math.random().toString(16).substr(2, 64)
-          ]
-        }),
         merkleTreeRoot: '0x' + Math.random().toString(16).substr(2, 64),
+        documentNumber: personalData.documentNumber,
+        birthDate: personalData.birthDate,
+        merklePathDocument: generateMerklePath(),
+        merklePathBirthDate: generateMerklePath(),
         transactionID: 'TXN-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase()
       }
 

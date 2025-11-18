@@ -54,32 +54,36 @@
   word-break: break-all;
 }
 
-.json-preview {
+.qr-container {
   background: #f8f9fa;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 20px;
+  padding: 24px;
   margin-bottom: 32px;
-  text-align: left;
+  text-align: center;
 }
 
-.json-title {
+.qr-title {
   font-size: 18px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
-.json-content {
-  background: #2d2d2d;
-  color: #f8f8f2;
-  padding: 16px;
-  border-radius: 4px;
-  overflow-x: auto;
-  font-size: 12px;
-  line-height: 1.5;
-  font-family: 'Courier New', monospace;
-  margin: 0;
+.qr-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.qr-code-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .actions {

@@ -13,14 +13,17 @@ export interface EventData {
 
 export interface PersonalData {
   name: string
-  age: number
   email: string
   documentNumber: string
+  birthDate: string
 }
 
 export interface PurchaseResult {
-  merkleTree: string
   merkleTreeRoot: string
+  documentNumber: string
+  birthDate: string
+  merklePathDocument: string[]
+  merklePathBirthDate: string[]
   transactionID: string
 }
 

@@ -10,9 +10,9 @@ interface PersonalDataFormProps {
 function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
   const [formData, setFormData] = useState<PersonalData>({
     name: '',
-    age: 0,
     email: '',
-    documentNumber: ''
+    documentNumber: '',
+    birthDate: ''
   })
   const [errors, setErrors] = useState<Partial<Record<keyof PersonalData, string>>>({})
 
@@ -23,10 +23,6 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
       newErrors.name = 'Name is required'
     }
 
-    if (formData.age <= 0 || formData.age > 120) {
-      newErrors.age = 'Age must be a valid number between 1 and 120'
-    }
-
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -35,6 +31,16 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
 
     if (!formData.documentNumber.trim()) {
       newErrors.documentNumber = 'Document number is required'
+    }
+
+    if (!formData.birthDate.trim()) {
+      newErrors.birthDate = 'Birth date is required'
+    } else {
+      const birthDate = new Date(formData.birthDate)
+      const today = new Date()
+      if (birthDate > today) {
+        newErrors.birthDate = 'Birth date cannot be in the future'
+      }
     }
 
     setErrors(newErrors)
@@ -75,22 +81,6 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
         </div>
 
         <div className="input-group">
-          <label htmlFor="age">Age</label>
-          <input
-            id="age"
-            type="number"
-            min="1"
-            max="120"
-            value={formData.age || ''}
-            onChange={(e) => handleChange('age', parseInt(e.target.value) || 0)}
-            placeholder="25"
-            disabled={isSubmitting}
-            className={errors.age ? 'input error' : 'input'}
-          />
-          {errors.age && <span className="error-message">{errors.age}</span>}
-        </div>
-
-        <div className="input-group">
           <label htmlFor="email">Email</label>
           <input
             id="email"
@@ -117,6 +107,21 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
           />
           {errors.documentNumber && (
             <span className="error-message">{errors.documentNumber}</span>
+          )}
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="birthDate">Birth Date</label>
+          <input
+            id="birthDate"
+            type="date"
+            value={formData.birthDate}
+            onChange={(e) => handleChange('birthDate', e.target.value)}
+            disabled={isSubmitting}
+            className={errors.birthDate ? 'input error' : 'input'}
+          />
+          {errors.birthDate && (
+            <span className="error-message">{errors.birthDate}</span>
           )}
         </div>
       </div>
