@@ -4,10 +4,6 @@ import './QRValidator.css'
 
 interface QRData {
   merkleTreeRoot?: string
-  documentNumber?: string
-  birthDate?: string
-  merklePathDocument?: string[]
-  merklePathBirthDate?: string[]
   merklePaths?: {
     name?: string[]
     email?: string[]
@@ -90,45 +86,23 @@ function QRValidator({ onBack }: QRValidatorProps) {
       // Parse the QR code data
       const qrData: QRData = JSON.parse(decodedText)
 
-      // Check if this is a merkle paths QR (from MerklePathGenerator)
-      if (qrData.merklePaths) {
-        // Validate: fail if "name" is in merkle paths
-        const hasName = 'name' in qrData.merklePaths && qrData.merklePaths.name
-        
-        if (hasName) {
-          setValidationResult('error')
-          setErrorMessage('Invalid ticket')
-          return
-        }
-
-        // If validation passes (no name in paths)
-        setValidationResult('success')
-        return
-      }
-
-      // Legacy validation for old QR format
-      // Validate the QR code
-      // Invalid if document number is 12345678
-      if (qrData.documentNumber === '12345678') {
+      // Validate: QR must have merklePaths and merkleTreeRoot
+      if (!qrData.merklePaths || !qrData.merkleTreeRoot) {
         setValidationResult('error')
-        setErrorMessage('Invalid ticket: Document number not authorized')
+        setErrorMessage('Invalid QR code: Missing merklePaths or merkleTreeRoot')
         return
       }
 
-      // Check if all required fields are present
-      if (
-        !qrData.merkleTreeRoot ||
-        !qrData.documentNumber ||
-        !qrData.birthDate ||
-        !qrData.merklePathDocument ||
-        !qrData.merklePathBirthDate
-      ) {
+      // Validate: fail if "name" is in merkle paths just for testing purposes
+      const hasName = 'name' in qrData.merklePaths && qrData.merklePaths.name
+      
+      if (hasName) {
         setValidationResult('error')
-        setErrorMessage('Invalid QR code: Missing required data')
+        setErrorMessage('Invalid ticket')
         return
       }
 
-      // If validation passes
+      // If validation passes (no name in paths)
       setValidationResult('success')
     } catch (err) {
       console.error('Error parsing QR code:', err)
