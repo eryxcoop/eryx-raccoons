@@ -23,6 +23,8 @@ This application is meant for 3 kinds of user:
 * The buyer, client or **atendee**: it buys the ticket and presents it at the venue for the check-in.
 * The **validator**: works for the venue and validates the atendees' tickets.
 
+![](./images/role.png)
+
 We have a vision where no one has your location beforehand, or has to know more than the absolute necessary for you to access somewhere. Not having intermediaries also is an important source of privacy since you don't have to give personal information to a third party.
 
 ## Protocol detail
@@ -34,7 +36,13 @@ We have a vision where no one has your location beforehand, or has to know more 
 
 On the backend, this is going to deploy a Midnight smart contract with an owner (the creator of the event). This smart contract contains all the data relevant to the event, and the logic to manage the interactions that will be explained in the next sections. The important thing to have in mind is that the contract address must be published for everyone to see and buy tickets. 
 
-2) The client enters the publisher's page and finds the corresponding event (there might be more than one). Another option is that there's a hub of events where the clients can see events published by many organizers. By ckicking the desired event, the client will find a form with all the personal data needed to buy the ticket. This data will not be published on the public ledger or leave the user device whatsoever.
+![](./images/events.png)
+
+2) 
+
+The client enters the publisher's page and finds the corresponding event (there might be more than one). Another option is that there's a hub of events where the clients can see events published by many organizers. By ckicking the desired event, the client will find a form with all the personal data needed to buy the ticket. This data will not be published on the public ledger or leave the user device whatsoever.
+
+![](./images/personal_data.png)
 
 After filling this form, the client will do 2 things:
 * Create a Merkle Tree on the client side. The leafs are the client data, in the order declared by the event (hence by the contract). A future implementation could improve security by mixing a secret salt along with each piece of information. 
@@ -47,9 +55,13 @@ The ticket as such is composed by the client data, along with the event ID. Howe
 
 3) The atendee arrives to the event. The validator in the door asks for some kind of identification. The atendee and the validator agree in the data that is required (for example, the atendee might only want to disclose their ID but not their email). They both pick in their sides of the app the fields that should be disclosed.
 
+![](./images/disclosure.png)
+
 On the atendee's side, this will do the following:
 * Create a Merkle Path for each of piece of disclosed information
 * Generate a QR code that contains the plain value and the merkle path for each disclosed piece of information, along with the Merkle Root.
+
+![](./images/qr.png)
 
 On the validator's side, this will open a camera to scan the atendee's QR code. The validation will succeed when all the Merkle Paths have been checked. But this is not enough: the validator also has to check that the ticket is on the public ledger, and mark it as used. 
 
