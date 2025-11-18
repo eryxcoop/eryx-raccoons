@@ -56,7 +56,7 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath }: EventCodeInput
   return (
     <div className="event-code-input">
       <h1 className="title">Events</h1>
-      <p className="subtitle">Select an event to purchase tickets or generate merkle paths</p>
+      <p className="subtitle">Select an event to purchase tickets or generate credentials</p>
       
       <div className="events-grid">
         {events.map((event) => (

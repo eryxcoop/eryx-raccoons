@@ -61,7 +61,7 @@ function MerklePathGenerator() {
         (decodedText) => {
           handleQRCodeScanned(decodedText)
         },
-        (errorMessage) => {
+        (_errorMessage) => {
           // Ignore scanning errors
         }
       )
@@ -195,18 +195,14 @@ function MerklePathGenerator() {
     img.src = url
   }
 
-  const reset = () => {
-    setScannedMerkleTree(null)
-    setMerkleTreeRoot('')
-    setSelectedFields([])
-    setGeneratedQR(null)
-    setError('')
-  }
-
   return (
     <div className="merkle-path-generator">
-      <h1 className="title">Generate Merkle Paths</h1>
-      <p className="subtitle">Scan a QR code with merkle tree and select fields to generate paths</p>
+      {!generatedQR && (
+        <>
+          <h1 className="title">Generate Credentials</h1>
+          <p className="subtitle">Scan the ticket QR generated after purchase and select the fields required for your credential.</p>
+        </>
+      )}
 
       {!scannedMerkleTree && (
         <div className="scan-section">
@@ -237,7 +233,7 @@ function MerklePathGenerator() {
       {scannedMerkleTree && !generatedQR && (
         <div className="selection-section">
           <h2 className="section-title">Select Fields</h2>
-          <p className="section-subtitle">Choose which fields to generate merkle paths for</p>
+          <p className="section-subtitle">Choose which fields to generate credentials for</p>
 
           <div className="fields-grid">
             {availableFields.map(field => (
@@ -257,22 +253,15 @@ function MerklePathGenerator() {
             disabled={selectedFields.length === 0}
             className="button button-primary"
           >
-            Generate Merkle Paths
-          </button>
-
-          <button
-            onClick={reset}
-            className="button button-secondary"
-          >
-            Scan Another QR
+            Generate Credentials
           </button>
         </div>
       )}
 
       {generatedQR && (
         <div className="result-section">
-          <h2 className="section-title">Generated QR Code</h2>
-          <p className="section-subtitle">QR code with merkle paths for selected fields</p>
+          <h2 className="section-title">Generated Credential</h2>
+          <p className="section-subtitle">Download this credential or show it directly to the validator.</p>
 
           <div className="qr-container">
             <div className="qr-code-wrapper">
@@ -290,14 +279,7 @@ function MerklePathGenerator() {
             onClick={handleDownloadQR}
             className="button button-primary"
           >
-            Download QR Code
-          </button>
-
-          <button
-            onClick={reset}
-            className="button button-secondary"
-          >
-            Generate New
+            Download Credential
           </button>
         </div>
       )}
