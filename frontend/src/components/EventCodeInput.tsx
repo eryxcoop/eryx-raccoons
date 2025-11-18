@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { EventData } from '../App'
 import './EventCodeInput.css'
 
@@ -8,61 +8,84 @@ interface EventCodeInputProps {
 }
 
 function EventCodeInput({ onEventFound, onBack }: EventCodeInputProps) {
-  const [eventCode, setEventCode] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [selectedEventId, setSelectedEventId] = useState('')
+  const [events, setEvents] = useState<EventData[]>([])
   const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    // Load events from localStorage
+    const storedEvents: EventData[] = JSON.parse(localStorage.getItem('events') || '[]')
+    setEvents(storedEvents)
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!eventCode.trim()) {
-      setError('Please enter an event code')
+    if (!selectedEventId) {
+      setError('Please select an event')
       return
     }
 
-    setIsLoading(true)
+    const selectedEvent = events.find(event => event.name === selectedEventId)
+
+    if (!selectedEvent) {
+      setError('Event not found')
+      return
+    }
+
     setError('')
+    onEventFound(selectedEvent)
+  }
 
-    // Simulate event search
-    setTimeout(() => {
-      // Simulation: any code works, but you can change this
-      const mockEventData: EventData = {
-        name: 'Rock Concert',
-        date: '2024-12-25',
-        price: 15000
-      }
-
-      setIsLoading(false)
-      onEventFound(mockEventData)
-    }, 1500)
+  if (events.length === 0) {
+    return (
+      <div className="event-code-input">
+        <h1 className="title">Ticket Purchase</h1>
+        <p className="subtitle">No events available</p>
+        <p className="error-message">Please create an event first</p>
+        <button
+          onClick={onBack}
+          className="button button-secondary back-button"
+        >
+          Back to Home
+        </button>
+      </div>
+    )
   }
 
   return (
     <div className="event-code-input">
       <h1 className="title">Ticket Purchase</h1>
-      <p className="subtitle">Enter the event code to continue</p>
+      <p className="subtitle">Select an event to continue</p>
       
       <form onSubmit={handleSubmit} className="form">
         <div className="input-group">
-          <label htmlFor="eventCode">Event Code</label>
-          <input
-            id="eventCode"
-            type="text"
-            value={eventCode}
-            onChange={(e) => setEventCode(e.target.value)}
-            placeholder="e.g., EVT-2024-001"
-            disabled={isLoading}
+          <label htmlFor="eventSelect">Select Event</label>
+          <select
+            id="eventSelect"
+            value={selectedEventId}
+            onChange={(e) => {
+              setSelectedEventId(e.target.value)
+              setError('')
+            }}
             className="input"
-          />
+          >
+            <option value="">-- Select an event --</option>
+            {events.map((event) => (
+              <option key={event.name} value={event.name}>
+                {event.name}
+              </option>
+            ))}
+          </select>
           {error && <span className="error-message">{error}</span>}
         </div>
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={!selectedEventId}
           className="button button-primary"
         >
-          {isLoading ? 'Searching...' : 'Search Event'}
+          Continue
         </button>
       </form>
 

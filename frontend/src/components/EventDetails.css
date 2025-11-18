@@ -24,6 +24,17 @@
   margin-bottom: 16px;
 }
 
+.event-description {
+  margin-bottom: 16px;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+.event-description p {
+  margin: 0;
+  font-size: 14px;
+}
+
 .event-info-row {
   display: flex;
   justify-content: space-between;
