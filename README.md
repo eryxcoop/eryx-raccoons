@@ -61,5 +61,3 @@ Just run
 ```npm install && npm run dev```
 
 The proof server must be up and running. 
-
-## Business model and future projection
