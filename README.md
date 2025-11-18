@@ -58,6 +58,6 @@ Only certain people can do this verification to avoid a malicious user to mark u
 ## Run on a local environment
 Just run
 
-```npm install && npm run dev```
+```cd frontend && npm install && npm run dev```
 
 The proof server must be up and running. 
