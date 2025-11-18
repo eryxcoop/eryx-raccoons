@@ -2,11 +2,10 @@ import './Home.css'
 
 interface HomeProps {
   onNavigateToPurchase: () => void
-  onNavigateToCreateEvent: () => void
-  onNavigateToValidation: () => void
+  onNavigateToOrganizer: () => void
 }
 
-function Home({ onNavigateToPurchase, onNavigateToCreateEvent, onNavigateToValidation }: HomeProps) {
+function Home({ onNavigateToPurchase, onNavigateToOrganizer }: HomeProps) {
   return (
     <div className="home">
       <h1 className="title">Eryx Raccoons</h1>
@@ -17,19 +16,13 @@ function Home({ onNavigateToPurchase, onNavigateToCreateEvent, onNavigateToValid
           onClick={onNavigateToPurchase}
           className="button button-primary"
         >
-          Purchase Ticket
+          Join as Attendee
         </button>
         <button
-          onClick={onNavigateToCreateEvent}
+          onClick={onNavigateToOrganizer}
           className="button button-secondary"
         >
-          Create Event
-        </button>
-        <button
-          onClick={onNavigateToValidation}
-          className="button button-secondary"
-        >
-          Validate QR Code
+          Join as Organizer/Validator
         </button>
       </div>
     </div>

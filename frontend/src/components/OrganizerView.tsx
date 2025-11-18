@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { EventData } from '../App'
-import './EventCodeInput.css'
+import './OrganizerView.css'
 
-interface EventCodeInputProps {
-  onEventFound: (eventData: EventData) => void
-  onNavigateToMerklePath: () => void
+interface OrganizerViewProps {
+  onNavigateToValidation: () => void
+  onNavigateToCreateEvent: () => void
   onBack: () => void
 }
 
-function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventCodeInputProps) {
+function OrganizerView({ onNavigateToValidation, onNavigateToCreateEvent, onBack }: OrganizerViewProps) {
   const [events, setEvents] = useState<EventData[]>([])
 
   useEffect(() => {
@@ -17,14 +17,9 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventC
     setEvents(storedEvents)
   }, [])
 
-  const handlePurchase = (event: EventData, e: React.MouseEvent) => {
+  const handleValidate = (e: React.MouseEvent) => {
     e.stopPropagation()
-    onEventFound(event)
-  }
-
-  const handleGenerateMerklePaths = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    onNavigateToMerklePath()
+    onNavigateToValidation()
   }
 
   const formatDate = (dateString: string) => {
@@ -44,26 +39,10 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventC
     }).format(price)
   }
 
-  if (events.length === 0) {
-    return (
-      <div className="event-code-input">
-        <h1 className="title">Ticket Purchase</h1>
-        <p className="subtitle">No events available</p>
-        <p className="error-message">Please create an event first</p>
-        <button
-          onClick={onBack}
-          className="button button-secondary back-button"
-        >
-          Back to Home
-        </button>
-      </div>
-    )
-  }
-
   return (
-    <div className="event-code-input">
-      <h1 className="title">Events</h1>
-      <p className="subtitle">Select an event to purchase tickets or generate merkle paths</p>
+    <div className="organizer-view">
+      <h1 className="title">Organizer / Validator</h1>
+      <p className="subtitle">Select an event to validate tickets or create a new event</p>
       
       <div className="events-grid">
         {events.map((event) => (
@@ -89,20 +68,26 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventC
             </div>
             <div className="event-card-actions">
               <button
-                onClick={(e) => handlePurchase(event, e)}
+                onClick={handleValidate}
                 className="button button-primary card-button"
               >
-                Purchase
-              </button>
-              <button
-                onClick={handleGenerateMerklePaths}
-                className="button button-secondary card-button"
-              >
-                Generate Merkle Paths
+                Validate QR Code
               </button>
             </div>
           </div>
         ))}
+        
+        {/* Create Event Card */}
+        <div
+          className="event-card create-event-card"
+          onClick={onNavigateToCreateEvent}
+        >
+          <div className="create-event-content">
+            <div className="create-event-icon">+</div>
+            <h3 className="create-event-title">Create New Event</h3>
+            <p className="create-event-subtitle">Add a new event to the system</p>
+          </div>
+        </div>
       </div>
 
       <button
@@ -115,5 +100,5 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventC
   )
 }
 
-export default EventCodeInput
+export default OrganizerView
 

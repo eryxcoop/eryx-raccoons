@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Home from './components/Home'
 import CreateEvent from './components/CreateEvent'
 import EventCodeInput from './components/EventCodeInput'
+import OrganizerView from './components/OrganizerView'
 import EventDetails from './components/EventDetails'
 import PersonalDataForm from './components/PersonalDataForm'
 import PurchaseComplete from './components/PurchaseComplete'
@@ -36,12 +37,13 @@ export interface PurchaseResult {
   transactionID: string
 }
 
-type Step = 'home' | 'create-event' | 'code-input' | 'event-details' | 'purchase-complete' | 'qr-validation' | 'merkle-path-generator'
+type Step = 'home' | 'create-event' | 'code-input' | 'organizer-view' | 'event-details' | 'purchase-complete' | 'qr-validation' | 'merkle-path-generator'
 
 function App() {
   const [step, setStep] = useState<Step>('home')
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | null>(null)
+  const [createEventFrom, setCreateEventFrom] = useState<'home' | 'organizer'>('home')
 
   const handleEventFound = (data: EventData) => {
     setEventData(data)
@@ -71,23 +73,34 @@ function App() {
         {step === 'home' && (
           <Home
             onNavigateToPurchase={() => setStep('code-input')}
-            onNavigateToCreateEvent={() => setStep('create-event')}
-            onNavigateToValidation={() => setStep('qr-validation')}
+            onNavigateToOrganizer={() => setStep('organizer-view')}
           />
         )}
         {step === 'create-event' && (
           <CreateEvent
             onEventCreated={() => {
               alert('Event created successfully!')
-              setStep('home')
+              setStep(createEventFrom === 'organizer' ? 'organizer-view' : 'home')
             }}
-            onBack={handleBackToHome}
+            onBack={() => {
+              setStep(createEventFrom === 'organizer' ? 'organizer-view' : 'home')
+            }}
           />
         )}
         {step === 'code-input' && (
           <EventCodeInput
             onEventFound={handleEventFound}
             onNavigateToMerklePath={() => setStep('merkle-path-generator')}
+            onBack={handleBackToHome}
+          />
+        )}
+        {step === 'organizer-view' && (
+          <OrganizerView
+            onNavigateToValidation={() => setStep('qr-validation')}
+            onNavigateToCreateEvent={() => {
+              setCreateEventFrom('organizer')
+              setStep('create-event')
+            }}
             onBack={handleBackToHome}
           />
         )}
