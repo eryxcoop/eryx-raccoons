@@ -114,7 +114,7 @@ function CreateEvent({ onEventCreated }: CreateEventProps) {
       <h1 className="title">Create Event</h1>
       <p className="subtitle">Fill in the event details</p>
 
-      <form onSubmit={handleSubmit} className="form">
+      <form onSubmit={handleSubmit} className="form" autoComplete="off">
         <div className="input-group">
           <label htmlFor="name">Event Name</label>
           <input
@@ -123,6 +123,7 @@ function CreateEvent({ onEventCreated }: CreateEventProps) {
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="Rock Concert"
+            autoComplete="off"
             className={errors.name ? 'input error' : 'input'}
           />
           {errors.name && <span className="error-message">{errors.name}</span>}
@@ -137,6 +138,7 @@ function CreateEvent({ onEventCreated }: CreateEventProps) {
             value={formData.capacity}
             onChange={(e) => handleChange('capacity', e.target.value)}
             placeholder="1000"
+            autoComplete="off"
             className={errors.capacity ? 'input error' : 'input'}
           />
           {errors.capacity && <span className="error-message">{errors.capacity}</span>}
@@ -150,6 +152,7 @@ function CreateEvent({ onEventCreated }: CreateEventProps) {
             onChange={(e) => handleChange('description', e.target.value)}
             placeholder="Event description..."
             rows={4}
+            autoComplete="off"
             className={errors.description ? 'input error' : 'input'}
           />
           {errors.description && <span className="error-message">{errors.description}</span>}
@@ -165,6 +168,7 @@ function CreateEvent({ onEventCreated }: CreateEventProps) {
             value={formData.price}
             onChange={(e) => handleChange('price', e.target.value)}
             placeholder="15000"
+            autoComplete="off"
             className={errors.price ? 'input error' : 'input'}
           />
           {errors.price && <span className="error-message">{errors.price}</span>}
@@ -177,6 +181,7 @@ function CreateEvent({ onEventCreated }: CreateEventProps) {
             type="date"
             value={formData.date}
             onChange={(e) => handleChange('date', e.target.value)}
+            autoComplete="off"
             className={errors.date ? 'input error' : 'input'}
           />
           {errors.date && <span className="error-message">{errors.date}</span>}
