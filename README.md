@@ -7,6 +7,9 @@ You can find it [here](https://drive.google.com/drive/folders/1GtfeXogBiTVZcpU4S
 ## Slides
 You can find it [here](https://docs.google.com/presentation/d/106aXyx-QP5s17lqpoJu8gsiDDbgUvRSECsaLDkEwy6w).
 
+## Example deployed contract address
+0x0200acf4d5d91c602942c427948644bd9da8060e305d51de55ccb800cc61aeed83c7
+
 ## Overview
 CypherPass is a protocol and application for buying tickets. This is usefull for music shows, congresses and any other event. 
 
@@ -52,6 +55,11 @@ On the validator's side, this will open a camera to scan the atendee's QR code. 
 
 Only certain people can do this verification to avoid a malicious user to mark unused tickets as used, so the contract owner should also have the possibility to grant that role to one or many addresses. 
 
-## Business model and future projection
+## Run on a local environment
+Just run
 
-## 
+```npm install && npm run dev```
+
+The proof server must be up and running. 
+
+## Business model and future projection
