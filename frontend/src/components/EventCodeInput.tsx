@@ -5,10 +5,9 @@ import './EventCodeInput.css'
 interface EventCodeInputProps {
   onEventFound: (eventData: EventData) => void
   onNavigateToMerklePath: () => void
-  onBack: () => void
 }
 
-function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventCodeInputProps) {
+function EventCodeInput({ onEventFound, onNavigateToMerklePath }: EventCodeInputProps) {
   const [events, setEvents] = useState<EventData[]>([])
 
   useEffect(() => {
@@ -50,12 +49,6 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventC
         <h1 className="title">Ticket Purchase</h1>
         <p className="subtitle">No events available</p>
         <p className="error-message">Please create an event first</p>
-        <button
-          onClick={onBack}
-          className="button button-secondary back-button"
-        >
-          Back to Home
-        </button>
       </div>
     )
   }
@@ -104,13 +97,6 @@ function EventCodeInput({ onEventFound, onNavigateToMerklePath, onBack }: EventC
           </div>
         ))}
       </div>
-
-      <button
-        onClick={onBack}
-        className="button button-secondary back-button"
-      >
-        Back to Home
-      </button>
     </div>
   )
 }

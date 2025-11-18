@@ -16,13 +16,9 @@ interface ScannedQRData {
   birthDate?: string
 }
 
-interface MerklePathGeneratorProps {
-  onBack: () => void
-}
-
 type SelectedField = 'name' | 'email' | 'documentNumber' | 'birthDate'
 
-function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
+function MerklePathGenerator() {
   const [isScanning, setIsScanning] = useState(false)
   const [scannedMerkleTree, setScannedMerkleTree] = useState<MerkleTree | null>(null)
   const [merkleTreeRoot, setMerkleTreeRoot] = useState<string>('')
@@ -311,13 +307,6 @@ function MerklePathGenerator({ onBack }: MerklePathGeneratorProps) {
           {error}
         </div>
       )}
-
-      <button
-        onClick={onBack}
-        className="button button-secondary back-button"
-      >
-        Back to Home
-      </button>
     </div>
   )
 }

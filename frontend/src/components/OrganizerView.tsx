@@ -5,10 +5,9 @@ import './OrganizerView.css'
 interface OrganizerViewProps {
   onNavigateToValidation: () => void
   onNavigateToCreateEvent: () => void
-  onBack: () => void
 }
 
-function OrganizerView({ onNavigateToValidation, onNavigateToCreateEvent, onBack }: OrganizerViewProps) {
+function OrganizerView({ onNavigateToValidation, onNavigateToCreateEvent }: OrganizerViewProps) {
   const [events, setEvents] = useState<EventData[]>([])
 
   useEffect(() => {
@@ -89,13 +88,6 @@ function OrganizerView({ onNavigateToValidation, onNavigateToCreateEvent, onBack
           </div>
         </div>
       </div>
-
-      <button
-        onClick={onBack}
-        className="button button-secondary back-button"
-      >
-        Back to Home
-      </button>
     </div>
   )
 }

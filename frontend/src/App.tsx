@@ -8,6 +8,7 @@ import PersonalDataForm from './components/PersonalDataForm'
 import PurchaseComplete from './components/PurchaseComplete'
 import QRValidator from './components/QRValidator'
 import MerklePathGenerator from './components/MerklePathGenerator'
+import NavigationHeader from './components/NavigationHeader'
 import './App.css'
 
 export interface EventData {
@@ -41,39 +42,72 @@ type Step = 'home' | 'create-event' | 'code-input' | 'organizer-view' | 'event-d
 
 function App() {
   const [step, setStep] = useState<Step>('home')
+  const [history, setHistory] = useState<Step[]>([])
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | null>(null)
   const [createEventFrom, setCreateEventFrom] = useState<'home' | 'organizer'>('home')
 
+  const navigateTo = (newStep: Step) => {
+    if (step !== 'home' && step !== newStep) {
+      setHistory(prev => [...prev, step])
+    }
+    setStep(newStep)
+  }
+
   const handleEventFound = (data: EventData) => {
     setEventData(data)
-    setStep('event-details')
+    navigateTo('event-details')
   }
 
   const handlePurchaseComplete = (result: PurchaseResult) => {
     setPurchaseResult(result)
-    setStep('purchase-complete')
+    navigateTo('purchase-complete')
   }
 
   const handleReset = () => {
     setStep('code-input')
     setEventData(null)
     setPurchaseResult(null)
+    setHistory([])
   }
 
   const handleBackToHome = () => {
     setStep('home')
     setEventData(null)
     setPurchaseResult(null)
+    setHistory([])
+  }
+
+  const handleBack = () => {
+    if (history.length > 0) {
+      const previousStep = history[history.length - 1]
+      setHistory(prev => prev.slice(0, -1))
+      setStep(previousStep)
+      
+      // Reset data when going back from certain steps
+      if (previousStep === 'code-input' || previousStep === 'home') {
+        setEventData(null)
+        setPurchaseResult(null)
+      }
+    } else {
+      handleBackToHome()
+    }
   }
 
   return (
     <div className="app">
       <div className="container">
+        {step !== 'home' && (
+          <NavigationHeader
+            onHome={handleBackToHome}
+            onBack={handleBack}
+            showBack={history.length > 0}
+          />
+        )}
         {step === 'home' && (
           <Home
-            onNavigateToPurchase={() => setStep('code-input')}
-            onNavigateToOrganizer={() => setStep('organizer-view')}
+            onNavigateToPurchase={() => navigateTo('code-input')}
+            onNavigateToOrganizer={() => navigateTo('organizer-view')}
           />
         )}
         {step === 'create-event' && (
@@ -81,27 +115,23 @@ function App() {
             onEventCreated={() => {
               alert('Event created successfully!')
               setStep(createEventFrom === 'organizer' ? 'organizer-view' : 'home')
-            }}
-            onBack={() => {
-              setStep(createEventFrom === 'organizer' ? 'organizer-view' : 'home')
+              setHistory([])
             }}
           />
         )}
         {step === 'code-input' && (
           <EventCodeInput
             onEventFound={handleEventFound}
-            onNavigateToMerklePath={() => setStep('merkle-path-generator')}
-            onBack={handleBackToHome}
+            onNavigateToMerklePath={() => navigateTo('merkle-path-generator')}
           />
         )}
         {step === 'organizer-view' && (
           <OrganizerView
-            onNavigateToValidation={() => setStep('qr-validation')}
+            onNavigateToValidation={() => navigateTo('qr-validation')}
             onNavigateToCreateEvent={() => {
               setCreateEventFrom('organizer')
-              setStep('create-event')
+              navigateTo('create-event')
             }}
-            onBack={handleBackToHome}
           />
         )}
         {step === 'event-details' && eventData && (
@@ -114,14 +144,13 @@ function App() {
           <PurchaseComplete
             purchaseResult={purchaseResult}
             onReset={handleReset}
-            onBack={handleBackToHome}
           />
         )}
         {step === 'qr-validation' && (
-          <QRValidator onBack={handleBackToHome} />
+          <QRValidator />
         )}
         {step === 'merkle-path-generator' && (
-          <MerklePathGenerator onBack={handleBackToHome} />
+          <MerklePathGenerator />
         )}
       </div>
     </div>
