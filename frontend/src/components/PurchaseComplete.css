@@ -50,25 +50,25 @@
 .title {
   font-size: 36px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: #ffffff;
   margin-bottom: 12px;
   letter-spacing: -0.5px;
 }
 
 .subtitle {
   font-size: 18px;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 40px;
   font-weight: 400;
 }
 
 .transaction-info {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  background: rgba(255, 255, 255, 0.08);
   padding: 24px;
-  border-radius: 16px;
+  border-radius: 20px;
   margin-bottom: 32px;
   text-align: left;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .info-item {
@@ -78,8 +78,8 @@
 }
 
 .info-label {
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -87,16 +87,16 @@
 
 .info-value {
   font-size: 16px;
-  color: var(--text-primary);
+  color: #ffffff;
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', monospace;
   word-break: break-all;
   font-weight: 600;
 }
 
 .qr-container {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
-  border: 2px dashed var(--border-color);
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 28px;
   padding: 32px;
   margin-bottom: 40px;
   text-align: center;
@@ -104,20 +104,20 @@
 }
 
 .qr-container:hover {
-  border-color: var(--primary-color);
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .qr-title {
   font-size: 20px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
   margin-bottom: 8px;
 }
 
 .qr-subtitle {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.75);
   margin-bottom: 24px;
 }
 
@@ -126,8 +126,8 @@
   justify-content: center;
   align-items: center;
   padding: 24px;
-  background: var(--bg-white);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
   box-shadow: var(--shadow-lg);
   margin: 0 auto;
   max-width: 320px;
@@ -147,9 +147,9 @@
 }
 
 .button {
-  padding: 16px 32px;
+  padding: 18px 32px;
   border: none;
-  border-radius: 12px;
+  border-radius: 999px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -158,8 +158,8 @@
 }
 
 .button-primary {
-  background: var(--primary-gradient);
-  color: white;
+  background: #ffffff;
+  color: var(--primary-dark);
   box-shadow: var(--shadow-md);
 }
 
@@ -173,15 +173,14 @@
 }
 
 .button-secondary {
-  background: var(--bg-white);
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: none;
 }
 
 .button-secondary:hover {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 

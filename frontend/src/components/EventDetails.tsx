@@ -81,17 +81,17 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
         <div className="event-description">
           <p>{eventData.description}</p>
         </div>
-        <div className="event-info-row">
-          <span className="info-label">Date:</span>
-          <span className="info-value">{formatDate(eventData.date)}</span>
+        <div className="event-detail-row">
+          <span className="event-detail-label">Date:</span>
+          <span className="event-detail-value">{formatDate(eventData.date)}</span>
         </div>
-        <div className="event-info-row">
-          <span className="info-label">Capacity:</span>
-          <span className="info-value">{eventData.capacity.toLocaleString()} tickets</span>
+        <div className="event-detail-row">
+          <span className="event-detail-label">Capacity:</span>
+          <span className="event-detail-value">{eventData.capacity.toLocaleString()} tickets</span>
         </div>
-        <div className="event-info-row">
-          <span className="info-label">Price:</span>
-          <span className="info-value price">{formatPrice(eventData.price)}</span>
+        <div className="event-detail-row">
+          <span className="event-detail-label">Price:</span>
+          <span className="event-detail-value price">{formatPrice(eventData.price)}</span>
         </div>
       </div>
 

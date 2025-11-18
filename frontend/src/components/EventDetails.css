@@ -3,23 +3,26 @@
 }
 
 .title {
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: #ffffff;
   margin-bottom: 32px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
+  text-transform: lowercase;
 }
 
 .event-info-card {
   background: linear-gradient(135deg, #fdfbff 0%, #f3f6ff 45%, #edf9ff 100%);
   color: var(--text-primary);
-  padding: 32px;
-  border-radius: 20px;
+  padding: 36px;
+  border-radius: 28px;
   margin: 0 auto 32px;
   text-align: left;
   box-shadow: 0 12px 35px rgba(20, 20, 60, 0.15);
   border: 1px solid rgba(104, 112, 118, 0.12);
   max-width: 780px;
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(247, 250, 255, 0.95));
+  position: relative;
 }
 
 .event-name {
@@ -42,44 +45,49 @@
   font-weight: 400;
 }
 
-.event-info-row {
+.event-detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  margin-bottom: 18px;
+  gap: 18px;
+  padding: 18px 24px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
 }
 
-.event-info-row:last-child {
+.event-detail-row:last-child {
   margin-bottom: 0;
-  border-bottom: none;
-  padding-bottom: 0;
 }
 
-.info-label {
+.event-detail-label {
   font-size: 12px;
-  color: var(--primary-color);
+  color: #1b1433;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: rgba(102, 126, 234, 0.08);
-  padding: 6px 10px;
+  background: rgba(41, 61, 239, 0.18);
+  padding: 6px 18px;
   border-radius: 999px;
-  border: 1px solid rgba(102, 126, 234, 0.25);
+  border: 1px solid rgba(41, 61, 239, 0.38);
+  min-width: 130px;
+  text-align: center;
 }
 
-.info-value {
+.event-detail-value {
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #0c0f2e;
+  text-shadow: 0 1px 2px rgba(10, 12, 32, 0.08);
 }
 
-.info-value.price {
+.event-detail-value.price {
   font-size: 28px;
   font-weight: 800;
-  color: #0f172a;
+  color: #1525ff;
+  text-shadow: 0 4px 14px rgba(21, 37, 255, 0.3);
 }
 
 .divider {

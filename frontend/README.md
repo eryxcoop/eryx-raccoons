@@ -1,6 +1,6 @@
-# CipherPass - Frontend
+# CypherPass - Frontend
 
-CipherPass empowers people to purchase tickets directly, removing intermediaries and sharing only the minimum necessary data.
+CypherPass empowers people to purchase tickets directly, removing intermediaries and sharing only the minimum necessary data.
 
 ## Features
 
