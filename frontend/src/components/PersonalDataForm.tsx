@@ -64,7 +64,7 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="personal-data-form">
+    <form onSubmit={handleSubmit} className="personal-data-form" autoComplete="off">
       <div className="form-grid">
         <div className="input-group">
           <label htmlFor="name">Full Name</label>
@@ -75,6 +75,7 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
             onChange={(e) => handleChange('name', e.target.value)}
             placeholder="John Doe"
             disabled={isSubmitting}
+            autoComplete="off"
             className={errors.name ? 'input error' : 'input'}
           />
           {errors.name && <span className="error-message">{errors.name}</span>}
@@ -89,6 +90,7 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
             onChange={(e) => handleChange('email', e.target.value)}
             placeholder="john@example.com"
             disabled={isSubmitting}
+            autoComplete="off"
             className={errors.email ? 'input error' : 'input'}
           />
           {errors.email && <span className="error-message">{errors.email}</span>}
@@ -103,6 +105,7 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
             onChange={(e) => handleChange('documentNumber', e.target.value)}
             placeholder="12345678"
             disabled={isSubmitting}
+            autoComplete="off"
             className={errors.documentNumber ? 'input error' : 'input'}
           />
           {errors.documentNumber && (
@@ -118,6 +121,7 @@ function PersonalDataForm({ onSubmit, isSubmitting }: PersonalDataFormProps) {
             value={formData.birthDate}
             onChange={(e) => handleChange('birthDate', e.target.value)}
             disabled={isSubmitting}
+            autoComplete="off"
             className={errors.birthDate ? 'input error' : 'input'}
           />
           {errors.birthDate && (

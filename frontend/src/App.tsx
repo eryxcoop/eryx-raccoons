@@ -42,12 +42,17 @@ export interface PurchaseResult {
 
 type Step = 'home' | 'create-event' | 'code-input' | 'organizer-view' | 'event-details' | 'purchase-complete' | 'qr-validation' | 'merkle-path-generator'
 
+interface MerklePathState {
+  eventName?: string
+}
+
 function App() {
   const [step, setStep] = useState<Step>('home')
   const [history, setHistory] = useState<Step[]>([])
   const [eventData, setEventData] = useState<EventData | null>(null)
   const [purchaseResult, setPurchaseResult] = useState<PurchaseResult | null>(null)
   const [createEventFrom, setCreateEventFrom] = useState<'home' | 'organizer'>('home')
+  const [merklePathState, setMerklePathState] = useState<MerklePathState>({})
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   useEffect(() => {
@@ -155,7 +160,10 @@ function App() {
         {step === 'code-input' && (
           <EventCodeInput
             onEventFound={handleEventFound}
-            onNavigateToMerklePath={() => navigateTo('merkle-path-generator')}
+            onNavigateToMerklePath={(eventName) => {
+              setMerklePathState({ eventName })
+              navigateTo('merkle-path-generator')
+            }}
           />
         )}
         {step === 'organizer-view' && (
@@ -183,7 +191,7 @@ function App() {
           <QRValidator />
         )}
         {step === 'merkle-path-generator' && (
-          <MerklePathGenerator />
+          <MerklePathGenerator initialEventName={merklePathState.eventName} />
         )}
         </div>
       </div>

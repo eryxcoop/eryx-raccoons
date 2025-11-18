@@ -26,7 +26,7 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
     setTimeout(() => {
       // Generate mock purchase data
       const merkleTreeRoot = '0x' + Math.random().toString(16).substr(2, 64)
-      const merkleTree = JSON.stringify({
+      const merkleTree = {
         leaves: [
           '0x' + Math.random().toString(16).substr(2, 64),
           '0x' + Math.random().toString(16).substr(2, 64),
@@ -36,10 +36,20 @@ function EventDetails({ eventData, onPurchaseComplete }: EventDetailsProps) {
           '0x' + Math.random().toString(16).substr(2, 64),
           '0x' + Math.random().toString(16).substr(2, 64)
         ]
-      })
+      }
+
+      // Save merkle tree to localStorage mapped to the event
+      const merkleTreesKey = 'merkleTrees'
+      const existingMerkleTrees = JSON.parse(localStorage.getItem(merkleTreesKey) || '{}')
+      existingMerkleTrees[eventData.name] = {
+        merkleTree: merkleTree,
+        merkleTreeRoot: merkleTreeRoot,
+        personalData: personalData
+      }
+      localStorage.setItem(merkleTreesKey, JSON.stringify(existingMerkleTrees))
 
       const purchaseResult: PurchaseResult = {
-        merkleTree: merkleTree,
+        merkleTree: JSON.stringify(merkleTree),
         merkleTreeRoot: merkleTreeRoot,
         name: personalData.name,
         email: personalData.email,
