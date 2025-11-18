@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { PurchaseResult } from '../App'
 import './PurchaseComplete.css'
@@ -8,6 +9,8 @@ interface PurchaseCompleteProps {
 }
 
 function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
+  const qrRef = useRef<SVGSVGElement>(null)
+
   // Create QR code data object
   const qrData = {
     merkleTreeRoot: purchaseResult.merkleTreeRoot,
@@ -20,16 +23,37 @@ function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
   const qrDataString = JSON.stringify(qrData)
 
   const handleDownload = () => {
-    const jsonData = JSON.stringify(qrData, null, 2)
-    const blob = new Blob([jsonData], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `purchase-${purchaseResult.transactionID}.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    if (!qrRef.current) return
+
+    const svg = qrRef.current
+    const svgData = new XMLSerializer().serializeToString(svg)
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    const img = new Image()
+
+    img.onload = () => {
+      canvas.width = img.width
+      canvas.height = img.height
+      if (ctx) {
+        ctx.drawImage(img, 0, 0)
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `ticket-qr-${purchaseResult.transactionID}.png`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+          }
+        }, 'image/png')
+      }
+    }
+
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' })
+    const url = URL.createObjectURL(svgBlob)
+    img.src = url
   }
 
   return (
@@ -68,6 +92,7 @@ function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
         <p className="qr-subtitle">Scan this QR code to verify your ticket</p>
         <div className="qr-code-wrapper">
           <QRCodeSVG
+            ref={qrRef}
             value={qrDataString}
             size={256}
             level="H"
@@ -78,7 +103,7 @@ function PurchaseComplete({ purchaseResult, onReset }: PurchaseCompleteProps) {
 
       <div className="actions">
         <button onClick={handleDownload} className="button button-primary">
-          Download Data
+          Download QR Code
         </button>
         <button onClick={onReset} className="button button-secondary">
           New Purchase
